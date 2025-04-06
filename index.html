@@ -240,7 +240,7 @@
             transition: var(--transition);
             background-color: white;
         }
-
+mainTabs
         input:focus, select:focus {
             outline: none;
             border-color: var(--secondary);
@@ -774,6 +774,25 @@
                 padding: 20px;
             }
         }
+			.tabs {
+				position: relative;
+				display: flex;
+				gap: 5px;
+				align-items: center; /* Added for vertical alignment */
+			}
+
+			.tab-actions {
+				margin-left: auto; /* Pushes buttons to the right */
+				display: flex;
+				gap: 10px;
+				padding: 0 15px;
+			}
+
+			/* Make buttons smaller to fit */
+			.tab-actions .btn-sm {
+				padding: 8px 12px;
+				font-size: 13px;
+			}
 
         @media (max-width: 768px) {
             .sidebar {
@@ -904,6 +923,14 @@
                         <button class="tab-btn" onclick="openTab('about')">
                             <i class="fas fa-info-circle"></i> About
                         </button>
+					<div class="tab-actions">
+						<button class="btn btn-sm btn-primary" onclick="calculate()">
+							<i class="fas fa-calculator"></i> Calculate
+						</button>
+						<button class="btn btn-sm btn-secondary" onclick="resetInputs()">
+							<i class="fas fa-redo"></i> Reset
+						</button>
+					</div>
                         <div class="tab-indicator" id="tabIndicator"></div>
                     </div>
 
@@ -1097,16 +1124,7 @@
                                 
                                 <div class="summary-box summary-success" id="bikeSummary">
                                     <strong>Best Equipment:</strong> Loading...
-                                </div>
-                                
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" onclick="calculate()">
-                                        <i class="fas fa-calculator"></i> Calculate
-                                    </button>
-                                    <button class="btn btn-secondary" onclick="resetInputs()">
-                                        <i class="fas fa-redo"></i> Reset
-                                    </button>
-                                </div>
+                                </div>                             
                             </div>
                         </div>
 
