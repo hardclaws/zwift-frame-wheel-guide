@@ -711,6 +711,12 @@
             visibility: visible;
             opacity: 1;
         }
+		
+		.wattbomb-icon {
+			height: 60px;
+			width: 60px;
+			vertical-align: -6px; /* Negative values pull it up */
+		}
 
         /* ===== Accordion ===== */
         .accordion {
@@ -852,6 +858,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="openTab('training')">
+                        <i class="fas fa-dumbbell"></i> Training Plan
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link" onclick="openTab('tutorial')">
                         <i class="fas fa-graduation-cap"></i> Tutorial
                     </a>
@@ -883,6 +894,9 @@
                         </button>
                         <button class="tab-btn" onclick="openTab('frameLevels')">
                             <i class="fas fa-bicycle"></i> Frame Levels
+                        </button>
+                        <button class="tab-btn" onclick="openTab('training')">
+                            <i class="fas fa-dumbbell"></i> Training Plan
                         </button>
                         <button class="tab-btn" onclick="openTab('tutorial')">
                             <i class="fas fa-graduation-cap"></i> Tutorial
@@ -1136,24 +1150,6 @@
                             </div>
                         </div>
 
-                        <!-- Training Plan -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">
-                                    <i class="fas fa-dumbbell"></i> Training Plan
-                                </h3>
-                            </div>
-                            
-                            <div class="summary-box summary-primary" id="trainingSummary">
-                                <h4>Course-Specific Training Recommendations</h4>
-                                <p>Select a route and click Calculate to see training recommendations.</p>
-                            </div>
-                            
-                            <div class="grid grid-2" id="trainingDetails">
-                                <!-- Will be populated dynamically -->
-                            </div>
-                        </div>
-
                         <!-- Wheel & Frame Filters -->
                         <div class="grid grid-2">
                             <div class="card">
@@ -1378,6 +1374,96 @@
                         </div>
                     </div>
 
+                    <!-- Training Plan Tab -->
+                    <div id="training" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <i class="fas fa-dumbbell"></i> Training Plan
+                                </h2>
+                            </div>
+                            
+                            <div class="grid grid-2">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-cog"></i> Training Settings
+                                        </h3>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Training Period (weeks)</label>
+                                        <select id="trainingPeriod" onchange="updateTrainingPlan()">
+                                            <option value="4">4 weeks</option>
+                                            <option value="8" selected>8 weeks</option>
+                                            <option value="12">12 weeks</option>
+                                            <option value="16">16 weeks</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Training Focus</label>
+                                        <select id="trainingFocus" onchange="updateTrainingPlan()">
+                                            <option value="balanced">Balanced</option>
+                                            <option value="endurance">Endurance</option>
+                                            <option value="climbing">Climbing</option>
+                                            <option value="sprint">Sprint</option>
+                                            <option value="tt">Time Trial</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Days Available per Week</label>
+                                        <select id="trainingDays" onchange="updateTrainingPlan()">
+                                            <option value="3">3 days</option>
+                                            <option value="4" selected>4 days</option>
+                                            <option value="5">5 days</option>
+                                            <option value="6">6 days</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" onclick="updateTrainingPlan()">
+                                            <i class="fas fa-sync-alt"></i> Update Plan
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-chart-line"></i> Training Summary
+                                        </h3>
+                                    </div>
+                                    
+                                    <div class="summary-box summary-primary" id="trainingSummary">
+                                        <h4>Course-Specific Training Recommendations</h4>
+                                        <p>Select a route and click Calculate to see training recommendations.</p>
+                                    </div>
+                                    
+                                    <div class="summary-box summary-success">
+                                        <h4>Training Plan Overview</h4>
+                                        <div id="trainingOverview">
+                                            <!-- Will be populated dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-calendar-alt"></i> Weekly Breakdown
+                                    </h3>
+                                </div>
+                                
+                                <div id="trainingDetails">
+                                    <!-- Will be populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Tutorial Tab -->
                     <div id="tutorial" class="tab-content">
                         <div class="card">
@@ -1507,7 +1593,7 @@
                                             <div class="card">
                                                 <h4>Training Recommendations</h4>
                                                 <p>Get course-specific training advice to prepare for your target route.</p>
-                                                <p><strong>How to:</strong> These appear after calculating with a selected route.</p>
+                                                <p><strong>How to:</strong> These appear in the Training Plan tab after calculating with a selected route.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1516,86 +1602,75 @@
                         </div>
                     </div>
 
-                    <!-- About Tab -->
-                    <div id="about" class="tab-content">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="card-title">
-                                    <i class="fas fa-info-circle"></i> About Zwift Wheel Optimizer Pro
-                                </h2>
-                            </div>
-                            
-                            <div class="grid grid-2">
-                                <div class="card">
-                                    <h3>What is this tool?</h3>
-                                    <p>The Zwift Wheel Optimizer Pro is a comprehensive tool designed to help Zwift cyclists maximize their virtual performance by selecting the optimal equipment combinations for any given course.</p>
-                                    <p>It analyzes:</p>
-                                    <ul>
-                                        <li>Rider characteristics (weight, height, power output)</li>
-                                        <li>Course profile (distance, elevation, terrain)</li>
-                                        <li>Equipment specifications (wheels, frames, levels)</li>
-                                    </ul>
-                                    <p>To provide personalized recommendations that can save you valuable seconds on your rides.</p>
-                                </div>
-                                
-                                <div class="card">
-                                    <h3>How are calculations made?</h3>
-                                    <p>The optimizer uses a sophisticated algorithm that considers:</p>
-                                    <ul>
-                                        <li><strong>Aerodynamics:</strong> More important on flat courses and at higher speeds</li>
-                                        <li><strong>Weight:</strong> More important on hilly courses and for lighter riders</li>
-                                        <li><strong>Power Output:</strong> Affects the relative importance of aero vs weight</li>
-                                        <li><strong>Course Profile:</strong> Determines the balance between flat and climbing performance</li>
-                                    </ul>
-                                    <p>All calculations are based on publicly available data about Zwift's equipment performance characteristics.</p>
-                                </div>
-                                
-                                <div class="card">
-                                    <h3>Data Sources</h3>
-                                    <p>The tool uses equipment data from:</p>
-                                    <ul>
-                                        <li>Zwift Insider's equipment tests</li>
-                                        <li>Community-collected performance data</li>
-                                        <li>User-submitted custom wheel specifications</li>
-                                    </ul>
-                                    <p>All data is stored locally in your browser for privacy and performance.</p>
-                                </div>
-                                
-                                <div class="card">
-                                    <h3>Future Development</h3>
-                                    <p>Planned features include:</p>
-                                    <ul>
-                                        <li>More detailed course analysis</li>
-                                        <li>Rider position optimization</li>
-                                        <li>Drafting effect calculations</li>
-                                        <li>Zwift Power integration</li>
-                                        <li>Mobile app version</li>
-                                    </ul>
-                                    <p>Have suggestions? We'd love to hear them!</p>
-                                </div>
-                            </div>
-                            
-                            <div class="card text-center">
-                                <h3>Created with <i class="fas fa-heart" style="color: var(--accent);"></i> by Cycling Tech</h3>
-                                <p>Version 1.0 | © 2023</p>
-                                <div class="btn-group" style="justify-content: center;">
-                                    <button class="btn btn-outline">
-                                        <i class="fab fa-github"></i> GitHub
-                                    </button>
-                                    <button class="btn btn-outline">
-                                        <i class="fab fa-twitter"></i> Twitter
-                                    </button>
-                                    <button class="btn btn-outline">
-                                        <i class="fas fa-envelope"></i> Contact
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- About Tab -->
+<div id="about" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-info-circle"></i> About Zwift Wheel Optimizer Pro
+            </h2>
+        </div>
+        
+        <div class="grid grid-2">
+            <div class="card">
+                <h3>What is this tool?</h3>
+                <p>The Zwift Wheel Optimizer Pro is a comprehensive tool designed to help Zwift cyclists maximize their virtual performance by selecting the optimal equipment combinations for any given course.</p>
+                <p>It analyzes:</p>
+                <ul>
+                    <li>Rider characteristics (weight, height, power output)</li>
+                    <li>Course profile (distance, elevation, terrain)</li>
+                    <li>Equipment specifications (wheels, frames, levels)</li>
+                </ul>
+                <p>To provide personalized recommendations that can save you valuable seconds on your rides.</p>
+            </div>
+            
+            <div class="card">
+                <h3>How are calculations made?</h3>
+                <p>The optimizer uses a sophisticated algorithm that considers:</p>
+                <ul>
+                    <li><strong>Aerodynamics:</strong> More important on flat courses and at higher speeds</li>
+                    <li><strong>Weight:</strong> More important on hilly courses and for lighter riders</li>
+                    <li><strong>Power Output:</strong> Affects the relative importance of aero vs weight</li>
+                    <li><strong>Course Profile:</strong> Determines the balance between flat and climbing performance</li>
+                </ul>
+                <p>All calculations are based on publicly available data about Zwift's equipment performance characteristics.</p>
+            </div>
+            
+            <div class="card">
+                <h3>Data Sources</h3>
+                <p>The tool uses equipment data from:</p>
+                <ul>
+                    <li>Zwift Insider's equipment tests</li>
+                    <li>Community-collected performance data</li>
+                    <li>User-submitted custom wheel specifications</li>
+                </ul>
+                <p>All data is stored locally in your browser for privacy and performance.</p>
+            </div>
+            
+            <div class="card">
+                <h3>Connect With Me</h3>
+                <p>Created by a passionate Zwift cyclist to help the community optimize their virtual rides.</p>
+                <ul>
+                    <li><strong>Twitch:</strong> <a href="https://www.twitch.tv/hardclaws" target="_blank">twitch.tv/hardclaws</a></li>
+                    <li><strong>Email:</strong> <a href="mailto:thehardclaws@gmail.com">thehardclaws@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        
+		<div class="card text-center">
+			<h3>Created with <img src="images/wattbomb.png" class="wattbomb-icon" alt="wattbomb"> by twitch.tv/hardclaws</h3>
+			<p>Version 1.0 | © 2025</p>
+            <div class="btn-group" style="justify-content: center;">
+                <a href="https://www.twitch.tv/hardclaws" class="btn btn-outline" target="_blank">
+                    <i class="fab fa-twitch"></i> Twitch
+                </a>
+                <a href="mailto:thehardclaws@gmail.com" class="btn btn-outline">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
             </div>
         </div>
     </div>
+</div>
 
     <script>
         // ===== Global Variables =====
@@ -1735,6 +1810,9 @@
             // Special tab handling
             if (tabId === 'frameLevels') {
                 populateFrameLevelsTable();
+            }
+            if (tabId === 'training') {
+                updateTrainingPlan();
             }
         }
 
@@ -2314,88 +2392,167 @@
             }
         }
 
-        function calculateTrainingPlan(distance, elevation, profile) {
-            try {
-                const trainingSummary = document.getElementById('trainingSummary');
-                const trainingDetails = document.getElementById('trainingDetails');
-                
-                const isLong = distance > 80;
-                const isHilly = elevation/distance > 10;
-                const isMountainous = elevation/distance > 15;
-                
-                let recommendations = {
-                    base: [],
-                    build: [],
-                    specialty: []
-                };
-                
-                recommendations.base.push("2-3 endurance rides per week (60-90 mins)");
-                recommendations.base.push("1-2 interval sessions (VO2 max or threshold)");
-                
-                if (isLong) {
-                    recommendations.base.push("Weekly long ride building to 75% of race distance");
-                    recommendations.base.push("Focus on endurance and fat metabolism");
-                }
-                
-                if (isHilly) {
-                    recommendations.base.push("Include hill repeats (5-8% grade) 1x/week");
-                    recommendations.base.push("Strength training for climbing muscles");
-                }
-                
-                recommendations.build.push("Increase intensity with race-specific intervals");
-                
-                if (isMountainous) {
-                    recommendations.build.push("Sustained climb repeats (10-20 mins at threshold)");
-                    recommendations.build.push("Over-under intervals for variable gradient pacing");
-                } else if (isHilly) {
-                    recommendations.build.push("Hill sprints and short climb repeats (2-5 mins)");
-                } else {
-                    recommendations.build.push("Flat TT efforts at race pace");
-                }
-                
-                if (isLong) {
-                    recommendations.build.push("Long rides with race pace segments");
-                    recommendations.build.push("Practice fueling strategies during long rides");
-                }
-                
-                recommendations.specialty.push("Race simulation workouts");
-                recommendations.specialty.push("Taper volume while maintaining intensity");
-                
-                if (isMountainous) {
-                    recommendations.specialty.push("Back-to-back climbing days to simulate stage race fatigue");
-                }
-                
-                trainingSummary.innerHTML = `
-                    <h4>Course-Specific Training Recommendations</h4>
-                    <p><strong>${distance}km route with ${elevation}m elevation (${profile})</strong></p>
-                    <p>${getGeneralTrainingAdvice(distance, elevation)}</p>
-                `;
-                
-                trainingDetails.innerHTML = `
-                    <div class="card">
-                        <h5><i class="fas fa-layer-group"></i> Base Phase (4-8 weeks)</h5>
-                        <ul>
-                            ${recommendations.base.map(rec => `<li>${rec}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h5><i class="fas fa-chart-line"></i> Build Phase (3-6 weeks)</h5>
-                        <ul>
-                            ${recommendations.build.map(rec => `<li>${rec}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h5><i class="fas fa-trophy"></i> Specialty Phase (2-3 weeks)</h5>
-                        <ul>
-                            ${recommendations.specialty.map(rec => `<li>${rec}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-                
-            } catch (e) {
-                console.error("Training plan calculation error:", e);
-            }
+  // ===== Training Plan Functions =====
+function updateTrainingPlan() {
+    try {
+        const distance = parseInput('distance');
+        const elevation = parseInput('elevation');
+        const profile = document.getElementById('courseProfile').value;
+        const trainingPeriod = parseInt(document.getElementById('trainingPeriod').value);
+        const trainingFocus = document.getElementById('trainingFocus').value;
+        const trainingDays = parseInt(document.getElementById('trainingDays').value);
+        
+        // Clear existing content
+        document.getElementById('trainingDetails').innerHTML = '';
+        
+        // Recalculate with new parameters
+        calculateTrainingPlan(distance, elevation, profile, trainingPeriod, trainingFocus, trainingDays);
+    } catch (e) {
+        console.error("Error updating training plan:", e);
+    }
+}
+
+function calculateTrainingPlan(distance, elevation, profile, weeks = 8, focus = 'balanced', daysPerWeek = 4) {
+    try {
+        const trainingSummary = document.getElementById('trainingSummary');
+        const trainingDetails = document.getElementById('trainingDetails');
+        const trainingOverview = document.getElementById('trainingOverview');
+        
+        const isLong = distance > 80;
+        const isHilly = elevation/distance > 10;
+        const isMountainous = elevation/distance > 15;
+        
+        // Calculate phases based on total weeks - fixed calculation
+        const baseWeeks = Math.min(weeks - 2, Math.floor(weeks * 0.5)); // Ensure we don't exceed total weeks
+        const buildWeeks = Math.min(weeks - baseWeeks - 1, Math.floor(weeks * 0.35));
+        const specialtyWeeks = weeks - baseWeeks - buildWeeks;
+        
+        let recommendations = {
+            base: [],
+            build: [],
+            specialty: []
+        };
+        
+        // Base phase recommendations
+        recommendations.base.push(`${baseWeeks} weeks of base training`);
+        recommendations.base.push(`${daysPerWeek} rides per week`);
+        
+        if (isLong) {
+            recommendations.base.push("Weekly long ride building to 75% of race distance");
         }
+        
+        if (isHilly) {
+            recommendations.base.push("Include hill repeats (5-8% grade) 1x/week");
+        }
+        
+        // Build phase recommendations - now focus-specific
+        recommendations.build.push(`${buildWeeks} weeks of build training`);
+        
+        switch(focus) {
+            case 'endurance':
+                recommendations.build.push("Long tempo rides at 70-80% FTP");
+                break;
+            case 'climbing':
+                recommendations.build.push("Hill repeats and sustained threshold climbs");
+                break;
+            case 'sprint':
+                recommendations.build.push("Short, high-intensity intervals");
+                break;
+            case 'tt':
+                recommendations.build.push("Sustained threshold efforts in aero position");
+                break;
+            default: // balanced
+                recommendations.build.push("Mix of endurance and intensity work");
+        }
+        
+        // Specialty phase
+        recommendations.specialty.push(`${specialtyWeeks} weeks of specialty training`);
+        recommendations.specialty.push("Race-specific workouts");
+        
+        // Update UI
+        trainingSummary.innerHTML = `
+            <h4>Course-Specific Training Recommendations</h4>
+            <p><strong>${distance}km route with ${elevation}m elevation (${profile})</strong></p>
+            <p>${getGeneralTrainingAdvice(distance, elevation)}</p>
+        `;
+        
+        trainingOverview.innerHTML = `
+            <ul>
+                <li><strong>Total Duration:</strong> ${weeks} weeks</li>
+                <li><strong>Base Phase:</strong> ${baseWeeks} weeks</li>
+                <li><strong>Build Phase:</strong> ${buildWeeks} weeks</li>
+                <li><strong>Specialty Phase:</strong> ${specialtyWeeks} weeks</li>
+                <li><strong>Training Focus:</strong> ${focus.charAt(0).toUpperCase() + focus.slice(1)}</li>
+                <li><strong>Days per Week:</strong> ${daysPerWeek}</li>
+            </ul>
+        `;
+        
+        // Generate weekly breakdown
+        let weeklyBreakdown = '';
+        let weekCount = 1;
+        
+        // Base phase weeks
+        for (let i = 0; i < baseWeeks; i++) {
+            weeklyBreakdown += generateWeekCard(weekCount++, 'Base', focus, daysPerWeek, isLong, isHilly, i);
+        }
+        
+        // Build phase weeks
+        for (let i = 0; i < buildWeeks; i++) {
+            weeklyBreakdown += generateWeekCard(weekCount++, 'Build', focus, daysPerWeek, isLong, isHilly, i);
+        }
+        
+        // Specialty phase weeks
+        for (let i = 0; i < specialtyWeeks; i++) {
+            weeklyBreakdown += generateWeekCard(weekCount++, 'Specialty', focus, daysPerWeek-1, false, false, i);
+        }
+        
+        trainingDetails.innerHTML = weeklyBreakdown;
+        
+    } catch (e) {
+        console.error("Training plan calculation error:", e);
+    }
+}
+
+function generateWeekCard(weekNum, phase, focus, days, isLong, isHilly, weekIndex) {
+    let content = '';
+    
+    if (phase === 'Base') {
+        content = `
+            <li>${days} rides (${Math.floor(days * 0.7)} endurance, ${Math.floor(days * 0.3)} intensity)</li>
+            ${isLong ? `<li>Long ride: ${60 + (weekIndex * 10)} minutes</li>` : ''}
+            ${isHilly ? `<li>Hill repeats: ${3 + weekIndex} x 5 minutes @ threshold</li>` : ''}
+        `;
+    } 
+    else if (phase === 'Build') {
+        // Focus-specific content
+        if (focus === 'endurance') {
+            content = `
+                <li>${days} rides (${Math.floor(days * 0.6)} endurance, ${Math.floor(days * 0.4)} intensity)</li>
+                <li>Tempo intervals: 3 x 15 minutes @ 85% FTP</li>
+            `;
+        } 
+        else if (focus === 'climbing') {
+            content = `
+                <li>${days} rides (${Math.floor(days * 0.4)} endurance, ${Math.floor(days * 0.6)} intensity)</li>
+                <li>Climbing repeats: ${4 + weekIndex} x 8 minutes @ threshold</li>
+            `;
+        }
+        // ... other focus cases
+    }
+    else { // Specialty
+        content = `
+            <li>${days} rides (reduced volume, maintained intensity)</li>
+            <li>Race simulation: 1 session</li>
+        `;
+    }
+    
+    return `
+        <div class="card">
+            <h5>Week ${weekNum}: ${phase} Training</h5>
+            <ul>${content}</ul>
+        </div>
+    `;
+}
 
         function getGeneralTrainingAdvice(distance, elevation) {
             const metersPerKm = elevation / distance;
@@ -2535,27 +2692,27 @@
                 const framesData = getBikeFrames();
                 const bestFrameData = framesData.find(f => f.name === frameResults[0]?.name);
 
-                if (!(bestFrameData && bestFrameData.noWheels)) {
-                    updateChart(wheelResults);
-                    updateWheelTable(wheelResults);
-                    
-                    if (wheelResults.length > 0) {
-                        highlightWheel(wheelResults[0].name, true);
-                    }
-                } else {
-                    updateChart([]);
-                    updateWheelTable([]);
-                }
-                
-                updateFrameChart(frameResults);
-                updateFrameTable(frameResults);
+               if (!(bestFrameData && bestFrameData.noWheels)) {
+    updateChart(wheelResults);
+    updateWheelTable(wheelResults);
+    
+    if (wheelResults.length > 0) {
+        highlightWheel(wheelResults[0].name, true);
+    }
+} else {
+    updateChart([]);
+    updateWheelTable([]);
+}
+
+updateFrameChart(frameResults);
+updateFrameTable(frameResults);
                 
                 updateBikeSummary(wheelResults, frameResults);
                 
                 calculateFuelingPlan(inputs.distance, inputs.avgSpeed, inputs.power);
                 
                 const profile = document.getElementById('courseProfile').value;
-                calculateTrainingPlan(inputs.distance, inputs.elevation, profile);
+                updateTrainingPlan();
                 
             } catch (e) {
                 console.error("Calculation error:", e);
@@ -2891,413 +3048,404 @@
                         datasets: [{
                             label: 'Time Savings vs Zwift Carbon (seconds)',
                             data: frameResults.map(frame => frame.totalSavings),
-                            backgroundColor: frameResults.map((frame, index) => 
-                                index === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
-                            ),
-                            borderColor: 'rgba(0, 0, 0, 0.1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { 
-                                display: false 
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const frame = frameResults[context.dataIndex];
-                                        return [
-                                            `Frame: ${frame.name}`,
-                                            `Level: ${frame.currentLevel}`,
-                                            `Total Savings: ${frame.totalSavings.toFixed(1)}s`,
-                                            `Flat Savings: ${frame.flatSavings.toFixed(1)}s`,
-                                            `Climb Savings: ${frame.climbSavings.toFixed(1)}s`,
-                                            frame.currentLevel < 5 ? `Next Level Gain: ${frame.nextLevelGain.toFixed(1)}s` : 'Max Level'
-                                        ];
-                                    }
-                                }
-                            }
+                            backgroundColor: frameResults.map((frame, index) =>  
+                            index === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
+                        ),
+                        borderColor: 'rgba(0, 0, 0, 0.1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            display: false 
                         },
-                        scales: {
-                            y: {
-                                title: { 
-                                    display: true, 
-                                    text: 'Time Savings (seconds)', 
-                                    color: '#666',
-                                    font: { 
-                                        weight: 'bold' 
-                                    }
-                                },
-                                beginAtZero: true,
-                                grid: { 
-                                    color: '#eee' 
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const frame = frameResults[context.dataIndex];
+                                    return [
+                                        `Frame: ${frame.name}`,
+                                        `Level: ${frame.currentLevel}`,
+                                        `Total Savings: ${frame.totalSavings.toFixed(1)}s`,
+                                        `Flat Savings: ${frame.flatSavings.toFixed(1)}s`,
+                                        `Climb Savings: ${frame.climbSavings.toFixed(1)}s`,
+                                        frame.currentLevel < 5 ? `Next Level Gain: ${frame.nextLevelGain.toFixed(1)}s` : 'Max Level'
+                                    ];
                                 }
-                            },
-                            x: {
-                                grid: { 
-                                    display: false 
-                                }
-                            }
-                        },
-                        onClick: (e, elements) => {
-                            if (elements.length > 0) {
-                                const index = elements[0].index;
-                                const frameName = frameResults[index].name;
-                                highlightFrame(frameName);
                             }
                         }
+                    },
+                    scales: {
+                        y: {
+                            title: { 
+                                display: true, 
+                                text: 'Time Savings (seconds)', 
+                                color: '#666',
+                                font: { 
+                                    weight: 'bold' 
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: { 
+                                color: '#eee' 
+                            }
+                        },
+                        x: {
+                            grid: { 
+                                display: false 
+                            }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const frameName = frameResults[index].name;
+                            highlightFrame(frameName);
+                        }
                     }
-                });
-            } catch (e) {
-                console.error("Frame chart update error:", e);
-            }
-        }
-
-        function highlightWheel(wheelName, preventScroll = false) {
-            document.querySelectorAll('#wheelResults tr').forEach(row => {
-                row.classList.remove('selected');
-            });
-            
-            const rows = document.querySelectorAll('#wheelResults tr');
-            for (let i = 0; i < rows.length; i++) {
-                if (rows[i].textContent.includes(wheelName)) {
-                    rows[i].classList.add('selected');
-                    if (!preventScroll) {
-                        rows[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                    break;
-                }
-            }
-            
-            if (wheelChart) {
-                wheelChart.data.datasets[0].backgroundColor = wheelChart.data.labels.map((label, i) => 
-                    i === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
-                );
-                wheelChart.data.datasets[1].backgroundColor = wheelChart.data.labels.map((label, i) => 
-                    i === 0 ? 'rgba(231, 76, 60, 0.8)' : 'rgba(231, 76, 60, 0.6)'
-                );
-                
-                const wheelIndex = wheelChart.data.labels.indexOf(wheelName);
-                if (wheelIndex >= 0) {
-                    wheelChart.data.datasets[0].backgroundColor[wheelIndex] = 'rgba(241, 196, 15, 0.8)';
-                    wheelChart.data.datasets[1].backgroundColor[wheelIndex] = 'rgba(231, 76, 60, 0.8)';
-                    wheelChart.update();
-                }
-            }
-        }
-
-        function highlightFrame(frameName) {
-            document.querySelectorAll('#frameResults tr').forEach(row => {
-                row.classList.remove('selected');
-            });
-            
-            const rows = document.querySelectorAll('#frameResults tr');
-            for (let i = 0; i < rows.length; i++) {
-                if (rows[i].textContent.includes(frameName)) {
-                    rows[i].classList.add('selected');
-                    break;
-                }
-            }
-            
-            if (frameChart) {
-                frameChart.data.datasets[0].backgroundColor = frameChart.data.labels.map((label, i) => 
-                    i === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
-                );
-                
-                const frameIndex = frameChart.data.labels.indexOf(frameName);
-                if (frameIndex >= 0) {
-                    frameChart.data.datasets[0].backgroundColor[frameIndex] = 'rgba(241, 196, 15, 0.8)';
-                    frameChart.update();
-                }
-            }
-        }
-
-        function updateWheelTable(results) {
-            try {
-                const table = document.getElementById('wheelResults');
-                table.innerHTML = `
-                    <tr>
-                        <th>Rank</th>
-                        <th>Wheel</th>
-                        <th>Time Savings</th>
-                        <th>Actions</th>
-                    </tr>
-                `;
-
-                if (results.length === 0) {
-                    const row = table.insertRow();
-                    row.innerHTML = '<td colspan="4" style="text-align: center;">No wheels match your filters</td>';
-                    return;
-                }
-
-                results.forEach((wheel, index) => {
-                    const row = table.insertRow();
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${wheel.name} ${wheel.custom ? '<span class="badge badge-primary"><i class="fas fa-user-edit"></i> Custom</span>' : ''}</td>
-                        <td>${wheel.totalSavings.toFixed(1)}s</td>
-                        <td>
-                            ${wheel.custom ? `<button class="btn btn-danger btn-sm" onclick="removeWheel('${wheel.name}')"><i class="fas fa-trash"></i> Remove</button>` : ''}
-                        </td>
-                    `;
-                    
-                    row.onclick = function() {
-                        highlightWheel(wheel.name);
-                    };
-                    
-                    if (index === 0) {
-                        row.classList.add('highlight');
-                        row.classList.add('selected');
-                    }
-                });
-            } catch (e) {
-                console.error("Wheel table update error:", e);
-            }
-        }
-
-        function updateFrameTable(frameResults) {
-            try {
-                const table = document.getElementById('frameResults');
-                table.innerHTML = `
-                    <tr>
-                        <th>Rank</th>
-                        <th>Frame</th>
-                        <th>Current Level</th>
-                        <th>Time Savings</th>
-                        <th>Next Level Gain</th>
-                    </tr>
-                `;
-
-                if (frameResults.length === 0) {
-                    const row = table.insertRow();
-                    row.innerHTML = '<td colspan="5" style="text-align: center;">No frames available for selected bike types</td>';
-                    return;
-                }
-
-                frameResults.forEach((frame, index) => {
-                    const row = table.insertRow();
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${frame.name}</td>
-                        <td>${frame.currentLevel}</td>
-                        <td>${frame.totalSavings.toFixed(1)}s</td>
-                        <td style="color: ${frame.currentLevel < 5 ? 'var(--success)' : 'inherit'}">
-                            ${frame.currentLevel < 5 ? `<i class="fas fa-arrow-up"></i> +${frame.nextLevelGain.toFixed(1)}s` : '<i class="fas fa-check"></i> Max Level'}
-                        </td>
-                    `;
-                    
-                    row.onclick = function() {
-                        highlightFrame(frame.name);
-                    };
-                    
-                    if (index === 0) row.classList.add('highlight');
-                });
-            } catch (e) {
-                console.error("Frame table update error:", e);
-            }
-        }
-
-        // ===== Utility Functions =====
-        function parseInput(id) {
-            const value = parseFloat(document.getElementById(id).value);
-            return isNaN(value) ? 0 : value;
-        }
-
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${hours}h ${minutes}m ${secs}s`;
-        }
-
-        function resetInputs() {
-            localStorage.removeItem('userSettings');
-            document.getElementById('distance').value = '30';
-            document.getElementById('elevation').value = '150';
-            document.getElementById('weight').value = '75';
-            document.getElementById('height').value = '175';
-            document.getElementById('ftp').value = '300';
-            document.getElementById('powerRange').value = '100';
-            document.getElementById('powerRangeValue').textContent = '100%';
-            document.getElementById('power').value = '300';
-            document.getElementById('avgSpeed').value = '30';
-            document.getElementById('courseProfile').value = 'flat';
-            document.getElementById('routeSelect').value = 'custom';
-            document.getElementById('worldSelect').value = 'all';
-            document.getElementById('laps').value = '1';
-            
-            if (!isMetric) {
-                toggleUnits();
-            }
-
-            const bikeTypeChips = document.querySelectorAll('#bikeTypeFilters .filter-chip');
-            bikeTypeChips.forEach(chip => {
-                chip.classList.remove('active');
-                if (chip.dataset.bikeType === 'road') {
-                    chip.classList.add('active');
                 }
             });
-            document.querySelector('.bike-type-select-all').textContent = 'Deselect All';
+        } catch (e) {
+            console.error("Frame chart update error:", e);
+        }
+    }
+
+    function highlightWheel(wheelName, preventScroll = false) {
+        document.querySelectorAll('#wheelResultsTable tr').forEach(row => {
+            row.classList.remove('selected');
+        });
+        
+        const rows = document.querySelectorAll('#wheelResultsTable tr');
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].textContent.includes(wheelName)) {
+                rows[i].classList.add('selected');
+                if (!preventScroll) {
+                    rows[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                break;
+            }
+        }
+        
+        if (wheelChart) {
+            wheelChart.data.datasets[0].backgroundColor = wheelChart.data.labels.map((label, i) => 
+                i === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
+            );
+            wheelChart.data.datasets[1].backgroundColor = wheelChart.data.labels.map((label, i) => 
+                i === 0 ? 'rgba(231, 76, 60, 0.8)' : 'rgba(231, 76, 60, 0.6)'
+            );
             
-            calculate();
-            updateSpeedTimeChart();
+            const wheelIndex = wheelChart.data.labels.indexOf(wheelName);
+            if (wheelIndex >= 0) {
+                wheelChart.data.datasets[0].backgroundColor[wheelIndex] = 'rgba(241, 196, 15, 0.8)';
+                wheelChart.data.datasets[1].backgroundColor[wheelIndex] = 'rgba(231, 76, 60, 0.8)';
+                wheelChart.update();
+            }
+        }
+    }
+
+    function highlightFrame(frameName) {
+        document.querySelectorAll('#frameResultsTable tr').forEach(row => {
+            row.classList.remove('selected');
+        });
+        
+        const rows = document.querySelectorAll('#frameResultsTable tr');
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].textContent.includes(frameName)) {
+                rows[i].classList.add('selected');
+                break;
+            }
+        }
+        
+        if (frameChart) {
+            frameChart.data.datasets[0].backgroundColor = frameChart.data.labels.map((label, i) => 
+                i === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
+            );
+            
+            const frameIndex = frameChart.data.labels.indexOf(frameName);
+            if (frameIndex >= 0) {
+                frameChart.data.datasets[0].backgroundColor[frameIndex] = 'rgba(241, 196, 15, 0.8)';
+                frameChart.update();
+            }
+        }
+    }
+	
+	function updateWheelTable(results) {
+    try {
+        const table = document.getElementById('wheelResults');
+        table.innerHTML = `
+            <tr>
+                <th>Rank</th>
+                <th>Wheel</th>
+                <th>Time Savings</th>
+                <th>Actions</th>
+            </tr>
+        `;
+        
+        if (!results || results.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td colspan="4" class="text-center">No wheels match your filters</td>`;
+            table.appendChild(row);
+            return;
+        }
+        
+        results.slice(0, 10).forEach((wheel, index) => {
+            const row = document.createElement('tr');
+            row.dataset.wheelName = wheel.name;
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${wheel.name} ${wheel.brand ? `(${wheel.brand})` : ''}</td>
+                <td>${wheel.totalSavings.toFixed(1)}s</td>
+                <td>
+                    ${wheel.custom ? 
+                        `<button class="btn btn-sm btn-danger" onclick="removeWheel('${wheel.name}')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>` : 
+                        ''}
+                </td>
+            `;
+            table.appendChild(row);
+        });
+    } catch (e) {
+        console.error("Error updating wheel table:", e);
+    }
+}
+
+function updateFrameTable(results) {
+    try {
+        const table = document.getElementById('frameResults');
+        table.innerHTML = `
+            <tr>
+                <th>Rank</th>
+                <th>Frame</th>
+                <th>Current Level</th>
+                <th>Time Savings</th>
+                <th>Next Level Gain</th>
+            </tr>
+        `;
+        
+        if (!results || results.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td colspan="5" class="text-center">No frames match your filters</td>`;
+            table.appendChild(row);
+            return;
+        }
+        
+        results.slice(0, 10).forEach((frame, index) => {
+            const row = document.createElement('tr');
+            row.dataset.frameName = frame.name;
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${frame.name}</td>
+                <td>${frame.currentLevel}</td>
+                <td>${frame.totalSavings.toFixed(1)}s</td>
+                <td>${frame.currentLevel < 5 ? frame.nextLevelGain.toFixed(1) + 's' : 'Max Level'}</td>
+            `;
+            table.appendChild(row);
+        });
+    } catch (e) {
+        console.error("Error updating frame table:", e);
+    }
+}
+
+    // ===== Utility Functions =====
+    function parseInput(id) {
+        const value = parseFloat(document.getElementById(id).value);
+        return isNaN(value) ? 0 : value;
+    }
+
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${hours}h ${minutes}m ${secs}s`;
+    }
+
+    function resetInputs() {
+        localStorage.removeItem('userSettings');
+        document.getElementById('distance').value = '30';
+        document.getElementById('elevation').value = '150';
+        document.getElementById('weight').value = '75';
+        document.getElementById('height').value = '175';
+        document.getElementById('ftp').value = '300';
+        document.getElementById('powerRange').value = '100';
+        document.getElementById('powerRangeValue').textContent = '100%';
+        document.getElementById('power').value = '300';
+        document.getElementById('avgSpeed').value = '30';
+        document.getElementById('courseProfile').value = 'flat';
+        document.getElementById('routeSelect').value = 'custom';
+        document.getElementById('worldSelect').value = 'all';
+        document.getElementById('laps').value = '1';
+        
+        if (!isMetric) {
+            toggleUnits();
         }
 
-        // ===== Unit Conversion =====
-        document.getElementById('unitToggle').addEventListener('click', toggleUnits);
+        const bikeTypeChips = document.querySelectorAll('#bikeTypeFilters .filter-chip');
+        bikeTypeChips.forEach(chip => {
+            chip.classList.remove('active');
+            if (chip.dataset.bikeType === 'road') {
+                chip.classList.add('active');
+            }
+        });
+        document.querySelector('.bike-type-select-all').textContent = 'Deselect All';
+        
+        calculate();
+        updateSpeedTimeChart();
+    }
 
-        function toggleUnits() {
-            isMetric = !isMetric;
-            updateUnitDisplay();
-            convertValues();
-            saveUserSettings();
-            calculate();
+    // ===== Unit Conversion =====
+    document.getElementById('unitToggle').addEventListener('click', toggleUnits);
+
+    function toggleUnits() {
+        isMetric = !isMetric;
+        updateUnitDisplay();
+        convertValues();
+        saveUserSettings();
+        calculate();
+    }
+
+    function updateUnitDisplay() {
+        const labels = {
+            distance: ['km', 'mi'],
+            elevation: ['m', 'ft'],
+            weight: ['kg', 'lb']
+        };
+
+        Object.entries(labels).forEach(([id, units]) => {
+            document.getElementById(`${id}Label`).textContent = 
+                `${id.charAt(0).toUpperCase() + id.slice(1)} (${units[isMetric ? 0 : 1]})`;
+        });
+
+        const metricHeightGroup = document.querySelector('.metric-height');
+        const imperialHeightGroup = document.querySelector('.imperial-height');
+        if (isMetric) {
+            metricHeightGroup.style.display = 'flex';
+            imperialHeightGroup.style.display = 'none';
+        } else {
+            metricHeightGroup.style.display = 'none';
+            imperialHeightGroup.style.display = 'flex';
         }
 
-        function updateUnitDisplay() {
-            const labels = {
-                distance: ['km', 'mi'],
-                elevation: ['m', 'ft'],
-                weight: ['kg', 'lb']
-            };
+        const toggle = document.getElementById('unitToggle');
+        toggle.classList.toggle('imperial', !isMetric);
+        document.getElementById('unitLabel').textContent = isMetric ? 'Metric' : 'Imperial';
+    }
 
-            Object.entries(labels).forEach(([id, units]) => {
-                document.getElementById(`${id}Label`).textContent = 
-                    `${id.charAt(0).toUpperCase() + id.slice(1)} (${units[isMetric ? 0 : 1]})`;
+    function convertValues() {
+        const elements = [
+            { id: 'distance', factor: conversion.milesToKm },
+            { id: 'elevation', factor: conversion.feetToM },
+            { id: 'weight', factor: conversion.lbToKg }
+        ];
+
+        elements.forEach(({ id, factor }) => {
+            const element = document.getElementById(id);
+            let value = parseFloat(element.value);
+            value = isMetric ? value * factor : value / factor;
+            element.value = value.toFixed(1);
+        });
+
+        if (isMetric) {
+            const feet = parseFloat(document.getElementById('heightFeet').value) || 0;
+            const inches = parseFloat(document.getElementById('heightInches').value) || 0;
+            const totalInches = feet * 12 + inches;
+            const cm = totalInches * conversion.inToCm;
+            document.getElementById('height').value = cm.toFixed(0);
+        } else {
+            const cm = parseFloat(document.getElementById('height').value) || 0;
+            const totalInches = cm / conversion.inToCm;
+            const feet = Math.floor(totalInches / 12);
+            const inches = totalInches % 12;
+            document.getElementById('heightFeet').value = feet.toFixed(0);
+            document.getElementById('heightInches').value = inches.toFixed(1);
+        }
+    }
+
+    // ===== Filter Management =====
+    function populateBrandFilters() {
+        try {
+            const brandFilters = document.getElementById('brandFilters');
+            brandFilters.innerHTML = '';
+            
+            const wheels = getWheels();
+            const brands = [...new Set(wheels.map(w => w.brand).filter(b => b))];
+            
+            brands.forEach(brand => {
+                const chip = document.createElement('div');
+                chip.className = 'filter-chip active';
+                chip.textContent = brand;
+                chip.dataset.brand = brand;
+                chip.onclick = function() {
+                    this.classList.toggle('active');
+                };
+                brandFilters.appendChild(chip);
             });
-
-            const metricHeightGroup = document.querySelector('.metric-height');
-            const imperialHeightGroup = document.querySelector('.imperial-height');
-            if (isMetric) {
-                metricHeightGroup.style.display = 'flex';
-                imperialHeightGroup.style.display = 'none';
-            } else {
-                metricHeightGroup.style.display = 'none';
-                imperialHeightGroup.style.display = 'flex';
-            }
-
-            const toggle = document.getElementById('unitToggle');
-            toggle.classList.toggle('imperial', !isMetric);
-            document.getElementById('unitLabel').textContent = isMetric ? 'Metric' : 'Imperial';
+        } catch (e) {
+            console.error("Error populating brand filters:", e);
         }
+    }
 
-        function convertValues() {
-            const elements = [
-                { id: 'distance', factor: conversion.milesToKm },
-                { id: 'elevation', factor: conversion.feetToM },
-                { id: 'weight', factor: conversion.lbToKg }
-            ];
-
-            elements.forEach(({ id, factor }) => {
-                const element = document.getElementById(id);
-                let value = parseFloat(element.value);
-                value = isMetric ? value * factor : value / factor;
-                element.value = value.toFixed(1);
+    function populateFrameBrandFilters() {
+        try {
+            const frameBrandFilters = document.getElementById('frameBrandFilters');
+            frameBrandFilters.innerHTML = '';
+            
+            const frames = getBikeFrames();
+            const brands = [...new Set(frames.map(f => f.brand).filter(b => b))];
+            
+            brands.forEach(brand => {
+                const chip = document.createElement('div');
+                chip.className = 'filter-chip active';
+                chip.textContent = brand;
+                chip.dataset.brand = brand;
+                chip.onclick = function() {
+                    this.classList.toggle('active');
+                };
+                frameBrandFilters.appendChild(chip);
             });
-
-            if (isMetric) {
-                const feet = parseFloat(document.getElementById('heightFeet').value) || 0;
-                const inches = parseFloat(document.getElementById('heightInches').value) || 0;
-                const totalInches = feet * 12 + inches;
-                const cm = totalInches * conversion.inToCm;
-                document.getElementById('height').value = cm.toFixed(0);
-            } else {
-                const cm = parseFloat(document.getElementById('height').value) || 0;
-                const totalInches = cm / conversion.inToCm;
-                const feet = Math.floor(totalInches / 12);
-                const inches = totalInches % 12;
-                document.getElementById('heightFeet').value = feet.toFixed(0);
-                document.getElementById('heightInches').value = inches.toFixed(1);
-            }
+        } catch (e) {
+            console.error("Error populating frame brand filters:", e);
         }
+    }
 
-        // ===== Filter Management =====
-        function populateBrandFilters() {
-            try {
-                const brandFilters = document.getElementById('brandFilters');
-                brandFilters.innerHTML = '';
-                
-                const wheels = getWheels();
-                const brands = [...new Set(wheels.map(w => w.brand).filter(b => b))];
-                
-                brands.forEach(brand => {
-                    const chip = document.createElement('div');
-                    chip.className = 'filter-chip active';
-                    chip.textContent = brand;
-                    chip.dataset.brand = brand;
-                    chip.onclick = function() {
-                        this.classList.toggle('active');
-                    };
-                    brandFilters.appendChild(chip);
-                });
-            } catch (e) {
-                console.error("Error populating brand filters:", e);
-            }
+    function toggleAllBikeTypes() {
+        const chips = document.querySelectorAll('#bikeTypeFilters .filter-chip');
+        const selectAllText = document.querySelector('.bike-type-select-all');
+        
+        const allActive = Array.from(chips).every(chip => chip.classList.contains('active'));
+        
+        if (allActive) {
+            chips.forEach(chip => chip.classList.remove('active'));
+            selectAllText.textContent = 'Select All';
+        } else {
+            chips.forEach(chip => chip.classList.add('active'));
+            selectAllText.textContent = 'Deselect All';
         }
+        
+        calculate();
+    }
 
-        function populateFrameBrandFilters() {
-            try {
-                const frameBrandFilters = document.getElementById('frameBrandFilters');
-                frameBrandFilters.innerHTML = '';
-                
-                const frames = getBikeFrames();
-                const brands = [...new Set(frames.map(f => f.brand).filter(b => b))];
-                
-                brands.forEach(brand => {
-                    const chip = document.createElement('div');
-                    chip.className = 'filter-chip active';
-                    chip.textContent = brand;
-                    chip.dataset.brand = brand;
-                    chip.onclick = function() {
-                        this.classList.toggle('active');
-                    };
-                    frameBrandFilters.appendChild(chip);
-                });
-            } catch (e) {
-                console.error("Error populating frame brand filters:", e);
-            }
+    function toggleAllBrands(filterGroupId) {
+        const filterGroup = document.getElementById(filterGroupId);
+        const chips = filterGroup.querySelectorAll('.filter-chip');
+        const selectAllText = filterGroup.previousElementSibling.querySelector('.brand-select-all');
+        
+        const allActive = Array.from(chips).every(chip => chip.classList.contains('active'));
+        
+        if (allActive) {
+            chips.forEach(chip => chip.classList.remove('active'));
+            selectAllText.textContent = 'Select All';
+        } else {
+            chips.forEach(chip => chip.classList.add('active'));
+            selectAllText.textContent = 'Deselect All';
         }
+    }
 
-        function toggleAllBikeTypes() {
-            const chips = document.querySelectorAll('#bikeTypeFilters .filter-chip');
-            const selectAllText = document.querySelector('.bike-type-select-all');
-            
-            const allActive = Array.from(chips).every(chip => chip.classList.contains('active'));
-            
-            if (allActive) {
-                chips.forEach(chip => chip.classList.remove('active'));
-                selectAllText.textContent = 'Select All';
-            } else {
-                chips.forEach(chip => chip.classList.add('active'));
-                selectAllText.textContent = 'Deselect All';
-            }
-            
-            calculate();
-        }
-
-        function toggleAllBrands(filterGroupId) {
-            const filterGroup = document.getElementById(filterGroupId);
-            const chips = filterGroup.querySelectorAll('.filter-chip');
-            const selectAllText = filterGroup.previousElementSibling.querySelector('.brand-select-all');
-            
-            const allActive = Array.from(chips).every(chip => chip.classList.contains('active'));
-            
-            if (allActive) {
-                chips.forEach(chip => chip.classList.remove('active'));
-                selectAllText.textContent = 'Select All';
-            } else {
-                chips.forEach(chip => chip.classList.add('active'));
-                selectAllText.textContent = 'Deselect All';
-            }
-        }
-
-        // Initialize the app when the page loads
-        window.onload = init;
-    </script>
+    // Initialize the app when the page loads
+    window.onload = init;
+</script>
 </body>
 </html>
