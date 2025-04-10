@@ -8,8 +8,8 @@ window.routes = [
         lapElevation: 216,
         leadInDistance: 0.0,
         leadInElevation: 0,
-        gradient: 9.1,
-        metersPerKm: 99.0,
+        gradient: 9.8,
+        metersPerKm: 98.2,
         difficulty: 3.5,
         xp: 0
     },
@@ -21,8 +21,8 @@ window.routes = [
         lapElevation: 812,
         leadInDistance: 0.0,
         leadInElevation: 0,
-        gradient: 5.8,
-        metersPerKm: 60.0,
+        gradient: 6.0,
+        metersPerKm: 60.1,
         difficulty: 4,
         xp: 0
     },
@@ -333,8 +333,8 @@ window.routes = [
         lapElevation: 148,
         leadInDistance: 0.0,
         leadInElevation: 0,
-        gradient: 5.0,
-        metersPerKm: 49.4,
+        gradient: 4.9,  // Corrected from 5.0
+        metersPerKm: 49.3,
         difficulty: null,
         xp: 0
     },
@@ -476,8 +476,8 @@ window.routes = [
         lapElevation: 306,
         leadInDistance: 0.0,
         leadInElevation: 0,
-        gradient: 11.5,
-        metersPerKm: 113.7,
+        gradient: 11.3,  // Corrected from 11.5
+        metersPerKm: 113.3,
         difficulty: 2,
         xp: 0
     },
@@ -494,6 +494,45 @@ window.routes = [
         difficulty: 1,
         xp: 0
     },
+	{
+		name: "Oude Kwaremont",
+		world: "C",
+		category: "Climbs",
+		lapDistance: 1.5,
+		lapElevation: 64,
+		leadInDistance: 0.0,
+		leadInElevation: 0,
+		gradient: 4.3,         // (64 / (1.5*1000))*100 = 4.266...%
+		metersPerKm: 42.7,     // 64/1.5 = 42.666...
+		difficulty: 2,         // Typical Flemish climb rating
+		xp: 0
+},
+{
+		name: "Cauberg",
+		world: "C",
+		category: "Climbs",
+		lapDistance: 0.8,
+		lapElevation: 58,
+		leadInDistance: 0.0,
+		leadInElevation: 0,
+		gradient: 7.3,         // (58 / (0.8*1000))*100
+		metersPerKm: 72.5,      // 58/0.8
+		difficulty: 3,          // Amstel Gold Race classic
+    xp: 0
+},
+{
+		name: "Côte de la Redoute",
+		world: "C",
+		category: "Climbs",
+		lapDistance: 1.5,
+		lapElevation: 153,
+		leadInDistance: 0.0,
+		leadInElevation: 0,
+		gradient: 10.2,        // (153 / (1.5*1000))*100
+		metersPerKm: 102.0,     // 153/1.5
+		difficulty: 4,          // Ardennes classic (Liège-Bastogne-Liège)
+		xp: 0
+}
     {
         name: "Downtown Dolphin",
         world: "CC",
@@ -3221,7 +3260,7 @@ window.routes = [
     },
     // France routes
     {
-        name: "Roule Ma Poule",
+         name: "Roule Ma Poule",
         world: "F",
         category: "France",
         lapDistance: 22.9,
@@ -3254,8 +3293,8 @@ window.routes = [
         lapElevation: 1201,
         leadInDistance: 0.4,
         leadInElevation: 0,
-        gradient: 5.4,
-        metersPerKm: 53.5,
+        gradient: 5.3,
+        metersPerKm: 53.4,
         difficulty: 3.5,
         xp: 460
     },
@@ -3307,7 +3346,7 @@ window.routes = [
         leadInDistance: 0.9,
         leadInElevation: 0,
         gradient: 0.8,
-        metersPerKm: 8.0,
+        metersPerKm: 7.9,
         difficulty: 3.5,
         xp: 1220
     },
@@ -3362,6 +3401,123 @@ window.routes = [
         metersPerKm: 14.0,
         difficulty: 3,
         xp: 280
+    },
+	{
+        name: "Score Bleu",
+        world: "F",
+        category: "France",
+        lapDistance: 71.2,
+        lapElevation: 396,
+        leadInDistance: 2.6,
+        leadInElevation: 15,
+        gradient: 0.6,
+        metersPerKm: 5.6,
+        difficulty: 3,
+        xp: 1425
+    },
+    {
+        name: "Three Musketeers",
+        world: "F",
+        category: "France",
+        lapDistance: 35.2,
+        lapElevation: 195,
+        leadInDistance: 2.6,
+        leadInElevation: 15,
+        gradient: 0.6,
+        metersPerKm: 5.5,
+        difficulty: 3,
+        xp: 705
+    },
+    {
+        name: "Ven-10",
+        world: "F",
+        category: "France",
+        lapDistance: 10.0,
+        lapElevation: 780,
+        leadInDistance: 1.4,
+        leadInElevation: 37,
+        gradient: 7.8,
+        metersPerKm: 78.0,
+        difficulty: 4,
+        xp: 200
+    },
+    {
+        name: "Macaron",
+        world: "F",
+        category: "France",
+        lapDistance: 2.4,
+        lapElevation: 13,
+        leadInDistance: 0.2,
+        leadInElevation: 2,
+        gradient: 0.5,
+        metersPerKm: 5.4,
+        difficulty: 1,
+        xp: 50
+    },
+    {
+        name: "Gentil",
+        world: "F",
+        category: "France",
+        lapDistance: 23.2,
+        lapElevation: 243,
+        leadInDistance: 2.6,
+        leadInElevation: 15,
+        gradient: 1.0,
+        metersPerKm: 10.5,
+        difficulty: 2,
+        xp: 465
+    },
+    {
+        name: "Croissant",
+        world: "F",
+        category: "France",
+        lapDistance: 9.3,
+        lapElevation: 49,
+        leadInDistance: 3.2,
+        leadInElevation: 23,
+        gradient: 0.5,
+        metersPerKm: 5.3,
+        difficulty: 2,
+        xp: 165
+    },
+    {
+        name: "Hell of the North",
+        world: "F",
+        category: "France",
+        lapDistance: 19.8,
+        lapElevation: 241,
+        leadInDistance: 0.3,
+        leadInElevation: 0,
+        gradient: 1.2,
+        metersPerKm: 12.2,
+        difficulty: 3,
+        xp: 395
+    },
+    {
+        name: "Bon Voyage",
+        world: "F",
+        category: "France",
+        lapDistance: 28.2,
+        lapElevation: 132,
+        leadInDistance: 3.2,
+        leadInElevation: 23,
+        gradient: 0.5,
+        metersPerKm: 4.7,
+        difficulty: 2,
+        xp: 565
+    },
+    {
+        name: "Knights of the Roundabout",
+        world: "F",
+        category: "France",
+        lapDistance: 51.2,
+        lapElevation: 336,
+        leadInDistance: 3.2,
+        leadInElevation: 23,
+        gradient: 0.7,
+        metersPerKm: 6.6,
+        difficulty: 4,
+        xp: 1025
     },
     // Paris routes
     {
