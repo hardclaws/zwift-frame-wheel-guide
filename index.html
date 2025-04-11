@@ -410,6 +410,17 @@
             background-color: #fff3cd !important;
             box-shadow: 0 0 0 2px var(--warning);
         }
+		/* For Focus Equipment (keep existing but make more distinct) */
+		.summary-box.summary-warning {
+			background: #fff3cd;  /* Light yellow */
+			border-left: 4px solid #ffc107;  /* Amber border */
+		}
+
+		/* New style for Selected Equipment */
+		.summary-box.summary-selected {
+			background: #e8f5e9;  /* Light green */
+			border-left: 4px solid #4caf50;  /* Green border */
+		}
 
         /* ===== Charts ===== */
         .chart-container {
@@ -844,7 +855,7 @@
 		}
 
 		.summary-box.summary-info {
-			background: #e3f2fd;
+			background: #ffebee;
 			border-left: 4px solid var(--secondary);
 		}
 
@@ -1154,7 +1165,7 @@
 								<div class="summary-box summary-warning" id="focusEquipmentSummary">
 									<strong>Focus Equipment:</strong> Select a focus in Course Details
 								</div>
-								<div class="summary-box summary-warning" id="selectedEquipmentSummary">
+								<div class="summary-box summary-selected" id="selectedEquipmentSummary">
 									<strong>Selected Equipment:</strong> Click on a wheel or frame in the charts/tables to select
 								</div>
                             </div>
@@ -3400,6 +3411,7 @@ function initPacingChart(data, planType, raceStyle, isHilly) {
         }
 
         // Update the UI
+		document.getElementById('focusEquipmentSummary').className = 'summary-box summary-warning';
         document.getElementById('focusEquipmentSummary').innerHTML = focusSummaryHTML;
         
         calculateFuelingPlan(inputs.distance, inputs.avgSpeed, inputs.power);
@@ -3827,6 +3839,7 @@ function highlightFrame(frameName) {
 // Add this new function to update the selected equipment display
 function updateSelectedEquipment() {
     const selectedSummary = document.getElementById('selectedEquipmentSummary');
+	selectedSummary.className = 'summary-box summary-selected';
     
     if (!selectedWheel && !selectedFrame) {
         selectedSummary.innerHTML = '<strong>Selected Equipment:</strong> Click on a wheel or frame in the charts/tables to select';
