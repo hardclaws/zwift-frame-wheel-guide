@@ -3975,6 +3975,11 @@ function updateFrameTable(results) {
             table.appendChild(row);
         });
 
+        // Highlight the top frame by default
+        if (results.length > 0) {
+            highlightFrame(results[0].name);
+        }
+
     } catch (e) {
         console.error("Error updating frame table:", e);
     }
