@@ -3442,19 +3442,6 @@ window.routes = [
         xp: 200
     },
     {
-        name: "Macaron",
-        world: "F",
-        category: "France",
-        lapDistance: 2.4,
-        lapElevation: 13,
-        leadInDistance: 0.2,
-        leadInElevation: 2,
-        gradient: 0.5,
-        metersPerKm: 5.4,
-        difficulty: 1,
-        xp: 50
-    },
-    {
         name: "Gentil",
         world: "F",
         category: "France",
