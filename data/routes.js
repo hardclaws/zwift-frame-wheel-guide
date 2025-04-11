@@ -532,8 +532,8 @@ window.routes = [
 		metersPerKm: 102.0,     // 153/1.5
 		difficulty: 4,          // Ardennes classic (Liège-Bastogne-Liège)
 		xp: 0
-}
-    {
+},
+{
         name: "Downtown Dolphin",
         world: "CC",
         category: "Crit City",
@@ -545,7 +545,7 @@ window.routes = [
         metersPerKm: 8.7,
         difficulty: 1,
         xp: 0
-    },
+},
     {
         name: "The Bell Lap",
         world: "CC",
