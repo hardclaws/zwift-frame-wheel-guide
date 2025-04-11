@@ -519,49 +519,6 @@
             border-color: var(--secondary);
         }
 
-        /* ===== Unit Toggle ===== */
-        .unit-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: #ddd;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .toggle-switch.imperial {
-            background: var(--secondary);
-        }
-
-        .toggle-handle {
-            position: absolute;
-            left: 3px;
-            top: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            transition: var(--transition);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .toggle-switch.imperial .toggle-handle {
-            transform: translateX(30px);
-        }
-
-        .unit-label {
-            font-weight: 500;
-            color: var(--dark);
-        }
-
         /* ===== Badges ===== */
         .badge {
             display: inline-flex;
@@ -881,6 +838,35 @@
 		.chart-container:empty {
 		  display: none;
 		}
+		.summary-box.summary-warning {
+    background: #fff8e1;
+    border-left: 4px solid var(--warning);
+		}
+
+		.summary-box.summary-info {
+			background: #e3f2fd;
+			border-left: 4px solid var(--secondary);
+		}
+
+		.equipment-comparison {
+			margin-top: 10px;
+			font-size: 0.9em;
+		}
+
+		.equipment-comparison .better {
+			color: var(--success);
+			font-weight: bold;
+		}
+
+		.equipment-comparison .worse {
+			color: var(--danger);
+			font-weight: bold;
+		}
+
+		.equipment-comparison .same {
+			color: var(--dark-gray);
+			font-weight: bold;
+		}
     </style>
 </head>
 <body>
@@ -1001,14 +987,6 @@
                                         <input type="number" id="height" value="175">
                                     </div>
 
-                                    <div class="form-group imperial-height" style="display: none;">
-                                        <label>Height (ft/in)</label>
-                                        <div style="display: flex; gap: 5px;">
-                                            <input type="number" id="heightFeet" placeholder="Feet" min="0">
-                                            <input type="number" id="heightInches" placeholder="Inches" min="0" max="11.9" step="0.1">
-                                        </div>
-                                    </div>
-
                                     <div class="form-group">
                                         <label>FTP (W)</label>
                                         <input type="number" id="ftp" value="300" min="100" max="1000">
@@ -1104,6 +1082,16 @@
                                         </select>
                                     </div>
                                 </div>
+								<div class="form-group">
+									<label>Course Focus</label>
+									<select id="courseFocus">
+										<option value="auto">Auto (match profile)</option>
+										<option value="flat">Flat-focused</option>
+										<option value="rolling">Rolling-focused</option>
+										<option value="hilly">Hilly-focused</option>
+										<option value="mountainous">Mountainous-focused</option>
+									</select>
+								</div>
                                 
                                 <div class="summary-box summary-primary" id="routeSummary">
                                     <strong>Route Summary:</strong> Custom Route - 30.0 km, 150 m elevation
@@ -1160,9 +1148,15 @@
                                     </div>
                                 </div>
                                 
-                                <div class="summary-box summary-success" id="bikeSummary">
-                                    <strong>Best Equipment:</strong> Loading...
-                                </div>                             
+                                <div class="summary-box summary-primary" id="bikeSummary">
+									<strong>Best Equipment:</strong> Loading...
+								</div>
+								<div class="summary-box summary-warning" id="focusEquipmentSummary">
+									<strong>Focus Equipment:</strong> Select a focus in Course Details
+								</div>
+								<div class="summary-box summary-warning" id="selectedEquipmentSummary">
+									<strong>Selected Equipment:</strong> Click on a wheel or frame in the charts/tables to select
+								</div>
                             </div>
                         </div>
 
@@ -1310,7 +1304,7 @@
                                         <i class="fas fa-medal"></i> Top Wheel Recommendations
                                     </h3>
                                 </div>
-                                <table id="wheelResults">
+                                <table id="wheelResultsTable">
                                     <tr>
                                         <th>Rank</th>
                                         <th>Wheel</th>
@@ -1326,7 +1320,7 @@
                                         <i class="fas fa-medal"></i> Top Frame Recommendations
                                     </h3>
                                 </div>
-                                <table id="frameResults">
+                                <table id="frameResultsTable">
                                     <tr>
                                         <th>Rank</th>
                                         <th>Frame</th>
@@ -1338,49 +1332,7 @@
                             </div>
                         </div>
 
-                        <!-- Custom Wheel Form -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">
-                                    <i class="fas fa-plus-circle"></i> Add Custom Wheels
-                                </h3>
-                            </div>
-                            
-                            <div class="grid grid-2">
-                                <div class="form-group">
-                                    <label>Wheel Name</label>
-                                    <input type="text" id="wheelName" placeholder="Enter wheel name">
-                                </div>
-                                <div class="form-group">
-                                    <label>Brand</label>
-                                    <input type="text" id="wheelBrand" placeholder="Enter brand">
-                                </div>
-                                <div class="form-group">
-                                    <label>Flat Savings (seconds)</label>
-                                    <input type="number" id="wheelFlat" placeholder="Enter flat savings">
-                                </div>
-                                <div class="form-group">
-                                    <label>Climb Savings (seconds)</label>
-                                    <input type="number" id="wheelClimb" placeholder="Enter climb savings">
-                                </div>
-                            </div>
-                            
-                            <div class="btn-group">
-                                <button class="btn btn-primary" onclick="addWheel()">
-                                    <i class="fas fa-plus"></i> Add Wheel
-                                </button>
-                                <button class="btn btn-secondary" onclick="clearCustomForm()">
-                                    <i class="fas fa-eraser"></i> Clear
-                                </button>
-                            </div>
-                            
-                            <p class="text-muted mt-2" style="font-size: 0.9em;">
-                                <i class="fas fa-info-circle"></i> Note: Custom wheels are saved in your browser's local storage and will persist between sessions.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Frame Levels Tab -->
+                                           <!-- Frame Levels Tab -->
                     <div id="frameLevels" class="tab-content">
                         <div class="card">
                             <div class="card-header">
@@ -1820,54 +1772,12 @@
 </div>
 <script>
     // ===== Global Variables =====
-    let isMetric = true;
     let wheelChart = null;
     let frameChart = null;
     let speedTimeChart = null;
-    const conversion = {
-        milesToKm: 1.60934,
-        feetToM: 0.3048,
-        lbToKg: 0.453592,
-        inToCm: 2.54
-    };
-	 // ===== Tab Navigation =====
-    function openTab(tabId) {
-        // Update sidebar navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-        });
-        document.querySelector(`.nav-link[onclick="openTab('${tabId}')"]`).classList.add('active');
-        
-        // Update main tabs
-        document.querySelectorAll('.tab-content').forEach(pane => {
-            pane.classList.remove('active');
-        });
-        
-        document.querySelectorAll('.tab-btn').forEach(button => {
-            button.classList.remove('active');
-        });
-        
-        document.getElementById(tabId).classList.add('active');
-        document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
-        
-        // Update tab indicator
-        setupTabIndicator();
-        
-        // Special tab handling
-        if (tabId === 'frameLevels') {
-            populateFrameLevelsTable();
-        }
-        if (tabId === 'training') {
-            updateTrainingPlan();
-        }
-        if (tabId === 'racePlan') {
-        // Set default values when opening race plan tab
-        document.getElementById('planType').value = 'race';
-        document.getElementById('raceStyle').value = 'group';
-        updateRacePlan();
-        }
-    }
-
+	let selectedWheel = null;
+	let selectedFrame = null;
+    
     // Frame level data storage
     let frameLevels = {};
     
@@ -1877,34 +1787,33 @@
 
     // ===== Initialization =====
     function init() {
-        try {
-            // Setup UI elements
-            setupSidebarToggle();
-            setupTabIndicator();
-            
-            // Load data and initialize components
-            loadCustomData();
-            updateUnitDisplay();
-            populateBrandFilters();
-            populateFrameBrandFilters();
-            populateWorldSelect();
-            populateRouteSelect();
-            setupInputEventListeners();
-            populateFrameLevelsTable();
-            
-            // Load user settings and calculate
-            loadUserSettings();
-            calculate();
-            updateSpeedTimeChart();
-            
-            // Open first accordion by default
-            document.querySelector('.accordion').classList.add('active');
-            document.querySelector('.accordion .accordion-content').style.maxHeight = '1000px';
-            
-        } catch (e) {
-            console.error("Initialization error:", e);
-        }
+    try {
+        // Setup UI elements
+        setupSidebarToggle();
+        setupTabIndicator();
+        
+        // Load data and initialize components
+        loadCustomData();
+        populateBrandFilters();
+        populateFrameBrandFilters();
+        populateWorldSelect();
+        populateRouteSelect();
+        setupInputEventListeners();
+        populateFrameLevelsTable();
+        
+        // Load user settings and calculate
+        loadUserSettings();
+        calculate();
+        updateSpeedTimeChart();
+        
+        // Open first accordion by default
+        document.querySelector('.accordion').classList.add('active');
+        document.querySelector('.accordion .accordion-content').style.maxHeight = '1000px';
+        
+    } catch (e) {
+        console.error("Initialization error:", e);
     }
+}
 
     // ===== UI Setup Functions =====
     function setupSidebarToggle() {
@@ -1970,6 +1879,38 @@
             icon.classList.add('fa-chevron-down');
         }
     }
+	
+	        // ===== Tab Navigation =====
+        function openTab(tabId) {
+            // Update sidebar navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.nav-link[onclick="openTab('${tabId}')"]`).classList.add('active');
+            
+            // Update main tabs
+            document.querySelectorAll('.tab-content').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
+            
+            // Update tab indicator
+            setupTabIndicator();
+            
+            // Special tab handling
+            if (tabId === 'frameLevels') {
+                populateFrameLevelsTable();
+            }
+            if (tabId === 'training') {
+                updateTrainingPlan();
+            }
+        }
 
     // ===== Data Access Functions =====
     function getWheels() {
@@ -1996,29 +1937,23 @@
     }
 
     // ===== Local Storage Functions =====
-    function loadCustomData() {
-        try {
-            const savedWheels = localStorage.getItem('customWheels');
-            if (savedWheels) {
-                const customWheels = JSON.parse(savedWheels);
-                window.wheels = getWheels().filter(w => !w.custom);
-                window.wheels.push(...customWheels);
-            }
-            
-            const savedFrameLevels = localStorage.getItem('frameLevels');
-            if (savedFrameLevels) {
-                frameLevels = JSON.parse(savedFrameLevels);
-            } else {
-                const frames = getBikeFrames();
-                frames.forEach(frame => {
-                    frameLevels[frame.name] = 0;
-                });
-                saveFrameLevels();
-            }
-        } catch (e) {
-            console.error("Error loading custom data:", e);
+   function loadCustomData() {
+    try {
+        const savedFrameLevels = localStorage.getItem('frameLevels');
+        if (savedFrameLevels) {
+            frameLevels = JSON.parse(savedFrameLevels);
+        } else {
+            const frames = getBikeFrames();
+            frames.forEach(frame => {
+                frameLevels[frame.name] = 0;
+            });
+            saveFrameLevels();
         }
+    } catch (e) {
+        console.error("Error loading custom data:", e);
     }
+}
+
 
     function saveFrameLevels() {
         localStorage.setItem('frameLevels', JSON.stringify(frameLevels));
@@ -2028,8 +1963,6 @@
         const settings = {
             weight: document.getElementById('weight').value,
             height: document.getElementById('height').value,
-            heightFeet: document.getElementById('heightFeet').value,
-            heightInches: document.getElementById('heightInches').value,
             ftp: document.getElementById('ftp').value,
             power: document.getElementById('power').value,
             powerRange: document.getElementById('powerRange').value,
@@ -2039,36 +1972,46 @@
             courseProfile: document.getElementById('courseProfile').value,
             laps: document.getElementById('laps').value,
             routeSelect: document.getElementById('routeSelect').value,
-            worldSelect: document.getElementById('worldSelect').value,
-            isMetric: isMetric
+            worldSelect: document.getElementById('worldSelect').value
         };
         localStorage.setItem('userSettings', JSON.stringify(settings));
     }
 
-    function loadUserSettings() {
-        const savedSettings = localStorage.getItem('userSettings');
-        if (savedSettings) {
-            const settings = JSON.parse(savedSettings);
+   function loadUserSettings() {
+    const savedSettings = localStorage.getItem('userSettings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        
+        document.getElementById('weight').value = settings.weight || '75';
+        document.getElementById('height').value = settings.height || '175';
+        document.getElementById('ftp').value = settings.ftp || '300';
+        document.getElementById('power').value = settings.power || '300';
+        document.getElementById('powerRange').value = settings.powerRange || '100';
+        document.getElementById('powerRangeValue').textContent = (settings.powerRange || '100') + '%';
+        document.getElementById('distance').value = settings.distance || '30';
+        document.getElementById('elevation').value = settings.elevation || '150';
+        document.getElementById('avgSpeed').value = settings.avgSpeed || '30';
+        document.getElementById('courseProfile').value = settings.courseProfile || 'flat';
+        document.getElementById('laps').value = settings.laps || '1';
+        document.getElementById('courseFocus').value = settings.courseFocus || 'auto';
+        
+        // Restore world selection first
+        if (settings.worldSelect) {
+            document.getElementById('worldSelect').value = settings.worldSelect;
+            // Force update of routes for this world
+            updateWorldRoutes();
             
-            if (settings.isMetric !== undefined && settings.isMetric !== isMetric) {
-                toggleUnits();
-            }
-            
-            document.getElementById('weight').value = settings.weight || '75';
-            document.getElementById('height').value = settings.height || '175';
-            document.getElementById('heightFeet').value = settings.heightFeet || '';
-            document.getElementById('heightInches').value = settings.heightInches || '';
-            document.getElementById('ftp').value = settings.ftp || '300';
-            document.getElementById('power').value = settings.power || '300';
-            document.getElementById('powerRange').value = settings.powerRange || '100';
-            document.getElementById('powerRangeValue').textContent = (settings.powerRange || '100') + '%';
-            document.getElementById('distance').value = settings.distance || '30';
-            document.getElementById('elevation').value = settings.elevation || '150';
-            document.getElementById('avgSpeed').value = settings.avgSpeed || '30';
-            document.getElementById('courseProfile').value = settings.courseProfile || 'flat';
-            document.getElementById('laps').value = settings.laps || '1';
-            document.getElementById('routeSelect').value = settings.routeSelect || 'custom';
-            document.getElementById('worldSelect').value = settings.worldSelect || 'all';
+            // After routes are populated, restore route selection
+            setTimeout(() => {
+                if (settings.routeSelect) {
+                    document.getElementById('routeSelect').value = settings.routeSelect;
+                    updateRouteDetails();
+                }
+            }, 100);
+        } else {
+            document.getElementById('worldSelect').value = 'all';
+            document.getElementById('routeSelect').value = 'custom';
+        }
             
             // Update power zone display
             updatePowerZone();
@@ -2118,14 +2061,60 @@
             climbRatio: climbRatio / sum
         };
     }
+	
+	function getFocusEquipmentRecommendation(wheelResults, frameResults, focus) {
+    // When focus is auto, just return the best combination
+    if (focus === 'auto' || !focus) {
+        return window.bestCombination || null;
+    }
+    
+    // Rest of the existing logic for other focus types
+    const ratios = getFocusRatios(focus);
+    
+    // Find best wheel for focus
+    const bestFocusWheel = [...wheelResults].sort((a, b) => {
+        const aScore = (a.flatSavings * ratios.flatRatio) + (a.climbSavings * ratios.climbRatio);
+        const bScore = (b.flatSavings * ratios.flatRatio) + (b.climbSavings * ratios.climbRatio);
+        return bScore - aScore;
+    })[0];
+
+    // Find best frame for focus
+    const bestFocusFrame = [...frameResults].sort((a, b) => {
+        const aScore = (a.flatSavings * ratios.flatRatio) + (a.climbSavings * ratios.climbRatio);
+        const bScore = (b.flatSavings * ratios.flatRatio) + (b.climbSavings * ratios.climbRatio);
+        return bScore - aScore;
+    })[0];
+
+    return {
+        wheel: bestFocusWheel,
+        frame: bestFocusFrame,
+        focus: focus,
+        ratios
+    };
+}
 
     // ===== Event Handlers =====
     function setupInputEventListeners() {
         const calculationInputs = [
-            'weight', 'height', 'heightFeet', 'heightInches', 
-            'distance', 'elevation', 'avgSpeed', 'courseProfile', 
+            'weight', 'height', 'distance', 'elevation', 'avgSpeed', 'courseProfile', 
             'laps', 'ftp', 'power', 'powerRange', 'routeSelect', 'worldSelect'
         ];
+		document.getElementById('courseFocus').addEventListener('change', function() {
+    saveUserSettings();
+    calculate();
+});
+
+document.getElementById('worldSelect').addEventListener('change', function() {
+    saveUserSettings();
+    updateWorldRoutes();
+    calculate();
+});
+
+document.getElementById('routeSelect').addEventListener('change', function() {
+    saveUserSettings();
+    updateRouteDetails();
+    calculate();
+});
         
         calculationInputs.forEach(id => {
             document.getElementById(id).addEventListener('input', function() {
@@ -2305,41 +2294,47 @@
         });
     }
 
-    function updateRouteDetails() {
-        const routeSelect = document.getElementById('routeSelect');
-        const selectedRouteName = routeSelect.value;
-        
-        if (selectedRouteName === 'custom') {
-            const distance = parseInput('distance');
-            const elevation = parseInput('elevation');
-            const profile = calculateCourseProfile(elevation, distance);
-            document.getElementById('courseProfile').value = profile;
-            
-            document.getElementById('routeSummary').innerHTML = 
-                `<strong>Route Summary:</strong> Custom Route - ${distance} km, ${elevation} m elevation (${profile})`;
-            return;
-        }
-        
-        const route = window.routes.find(r => r.name === selectedRouteName);
-        if (!route) return;
-        
-        const laps = parseInt(document.getElementById('laps').value) || 1;
-        
-        const totalDistance = (route.lapDistance * laps) + (route.leadInDistance || 0);
-        const totalElevation = (route.lapElevation * laps) + (route.leadInElevation || 0);
-        
-        const profile = calculateCourseProfile(route.lapElevation, route.lapDistance);
-        
-        document.getElementById('distance').value = totalDistance.toFixed(1);
-        document.getElementById('elevation').value = Math.round(totalElevation);
+   function updateRouteDetails() {
+    const routeSelect = document.getElementById('routeSelect');
+    const selectedRouteName = routeSelect.value;
+    
+    if (selectedRouteName === 'custom') {
+        const distance = parseInput('distance');
+        const elevation = parseInput('elevation');
+        const profile = calculateCourseProfile(elevation, distance);
         document.getElementById('courseProfile').value = profile;
         
-        document.getElementById('routeSummary').innerHTML = 
-            `<strong>Route Summary:</strong> ${route.name} (${laps} ${laps === 1 ? 'lap' : 'laps'}) - ${totalDistance.toFixed(1)} km, ${Math.round(totalElevation)} m elevation (${profile})`;
+        // Reset focus to auto for custom routes
+        document.getElementById('courseFocus').value = 'auto';
         
-        saveUserSettings();
-        calculate();
+        document.getElementById('routeSummary').innerHTML = 
+            `<strong>Route Summary:</strong> Custom Route - ${distance} km, ${elevation} m elevation (${profile})`;
+        return;
     }
+    
+    const route = window.routes.find(r => r.name === selectedRouteName);
+    if (!route) return;
+    
+    const laps = parseInt(document.getElementById('laps').value) || 1;
+    
+    const totalDistance = (route.lapDistance * laps) + (route.leadInDistance || 0);
+    const totalElevation = (route.lapElevation * laps) + (route.leadInElevation || 0);
+    
+    const profile = calculateCourseProfile(route.lapElevation, route.lapDistance);
+    
+    document.getElementById('distance').value = totalDistance.toFixed(1);
+    document.getElementById('elevation').value = Math.round(totalElevation);
+    document.getElementById('courseProfile').value = profile;
+    
+    // Always reset to auto when route changes
+    document.getElementById('courseFocus').value = 'auto';
+    
+    document.getElementById('routeSummary').innerHTML = 
+        `<strong>Route Summary:</strong> ${route.name} (${laps} ${laps === 1 ? 'lap' : 'laps'}) - ${totalDistance.toFixed(1)} km, ${Math.round(totalElevation)} m elevation (${profile})`;
+    
+    saveUserSettings();
+    calculate();
+}
 
     // ===== Chart Functions =====
     function updateSpeedTimeChart() {
@@ -2469,8 +2464,7 @@
     function calculateFuelingPlan(distance, speed, power) {
         try {
             const weight = parseInput('weight');
-            const height = isMetric ? parseInput('height') : 
-                (parseInput('heightFeet') * 12 + parseInput('heightInches')) * conversion.inToCm;
+            const height = parseInput('height');
             const elevation = parseInput('elevation');
             
             const durationHours = distance / speed;
@@ -2905,7 +2899,6 @@ function updateCourseAnalysis(route, distance, elevation, metersPerKm) {
     `;
 }
 
-// Corrected time savings calculation function
 function calculateTimeSavings(distance, elevation, avgSpeed, power) {
     // Basic physics-based estimation
     const weight = parseInput('weight');
@@ -3212,181 +3205,241 @@ function initPacingChart(data, planType, raceStyle, isHilly) {
     }
 
     // ===== Main Calculation Function =====
-    function calculate() {
-        try {
-            const inputs = {
-                distance: parseInput('distance'),
-                elevation: parseInput('elevation'),
-                weight: parseInput('weight'),
-                height: isMetric ? parseInput('height') : 
-                    (parseInput('heightFeet') * 12 + parseInput('heightInches')) * conversion.inToCm,
-                power: parseInput('power'),
-                powerPercentage: parseInput('powerRange') / 100,
-                avgSpeed: parseInput('avgSpeed'),
-                laps: parseInput('laps') || 1
-            };
+  function calculate() {
+    try {
+        const inputs = {
+            distance: parseInput('distance'),
+            elevation: parseInput('elevation'),
+            weight: parseInput('weight'),
+            height: parseInput('height'),
+            power: parseInput('power'),
+            powerPercentage: parseInput('powerRange') / 100,
+            avgSpeed: parseInput('avgSpeed'),
+            laps: parseInput('laps') || 1
+        };
 
-            const selectedBikeTypes = Array.from(document.querySelectorAll('#bikeTypeFilters .filter-chip.active'))
-                .map(chip => chip.dataset.bikeType);
-            
-            if (selectedBikeTypes.length === 0) {
-                document.getElementById('bikeSummary').innerHTML = '<strong>Best Equipment:</strong> Please select at least one bike type';
-                return;
-            }
-
-            const routeSelect = document.getElementById('routeSelect');
-            const selectedRouteName = routeSelect.value;
-            let selectedRoute = null;
-            
-            if (selectedRouteName !== 'custom') {
-                selectedRoute = window.routes.find(r => r.name === selectedRouteName);
-            }
-
-            const metersPerKm = (inputs.elevation / inputs.distance);
-            const climbingImportance = Math.min(metersPerKm / 20, 0.95);
-            
-            const baseTime = (inputs.distance / inputs.avgSpeed) * 3600;
-            
-            let wheels = getWheels();
-            wheels = applyActiveFilters(wheels);
-            
-            const wheelResults = wheels.map(wheel => {
-                const wheelPerf = wheel.performance.road;
-                
-                const hasPerformanceForSelectedType = selectedBikeTypes.some(type => 
-                    wheel.performance[type] !== undefined
-                );
-                
-                if (!hasPerformanceForSelectedType) {
-                    return null;
-                }
-                
-                const weightFactor = Math.pow(inputs.weight / 75, 0.7); 
-                const powerFactor = Math.min(1 + (inputs.powerPercentage - 1) * 0.5, 1.5);
-                
-                let totalFlatSavings = 0;
-                let totalClimbSavings = 0;
-                
-                selectedBikeTypes.forEach(type => {
-                    const typePerf = wheel.performance[type] || wheel.performance.road;
-                    totalFlatSavings += typePerf.flat * (1 - climbingImportance) * baseTime / 3600 / weightFactor * powerFactor;
-                    totalClimbSavings += typePerf.climb * climbingImportance * baseTime / 3600 / (weightFactor * 1.2);
-                });
-                
-                const avgFlatSavings = totalFlatSavings / selectedBikeTypes.length;
-                const avgClimbSavings = totalClimbSavings / selectedBikeTypes.length;
-                const totalSavings = avgFlatSavings + avgClimbSavings;
-                
-                return {
-                    name: wheel.name,
-                    brand: wheel.brand,
-                    flatSavings: avgFlatSavings,
-                    climbSavings: avgClimbSavings,
-                    totalSavings,
-                    custom: wheel.custom || false
-                };
-            }).filter(wheel => wheel !== null).sort((a, b) => b.totalSavings - a.totalSavings);
-            
-            let frames = getBikeFrames();
-            frames = applyFrameFilters(frames);
-            frames = frames.filter(frame => selectedBikeTypes.includes(frame.type));
-            
-            const frameResults = frames.map(frame => {
-                const currentLevel = frameLevels[frame.name] || 0;
-                const currentStats = getFrameStatsAtLevel(frame, currentLevel);
-                
-                const weightFactor = Math.pow(inputs.weight / 75, 0.7);
-                const powerFactor = Math.min(1 + (inputs.powerPercentage - 1) * 0.5, 1.5);
-                
-                const currentFlatSavings = currentStats.flat * (1 - climbingImportance) * baseTime / 3600 / weightFactor * powerFactor;
-                const currentClimbSavings = currentStats.climb * climbingImportance * baseTime / 3600 / (weightFactor * 1.2);
-                const currentTotalSavings = currentFlatSavings + currentClimbSavings;
-                
-                let nextLevelGain = 0;
-                if (currentLevel < 5) {
-                    const nextStats = getFrameStatsAtLevel(frame, currentLevel + 1);
-                    const nextFlatSavings = nextStats.flat * (1 - climbingImportance) * baseTime / 3600 / weightFactor * powerFactor;
-                    const nextClimbSavings = nextStats.climb * climbingImportance * baseTime / 3600 / (weightFactor * 1.2);
-                    const nextTotalSavings = nextFlatSavings + nextClimbSavings;
-                    nextLevelGain = nextTotalSavings - currentTotalSavings;
-                }
-                
-                return {
-                    name: frame.name,
-                    currentLevel,
-                    flatSavings: currentFlatSavings,
-                    climbSavings: currentClimbSavings,
-                    totalSavings: currentTotalSavings,
-                    nextLevelGain
-                };
-            }).sort((a, b) => b.totalSavings - a.totalSavings);
-            
-            // Store results for race plan
-            lastWheelResults = wheelResults;
-            lastFrameResults = frameResults;
-            
-            const framesData = getBikeFrames();
-            const bestFrameData = framesData.find(f => f.name === frameResults[0]?.name);
-
-           if (!(bestFrameData && bestFrameData.noWheels)) {
-                updateChart(wheelResults);
-                updateWheelTable(wheelResults);
-                
-                if (wheelResults.length > 0) {
-                    highlightWheel(wheelResults[0].name, true);
-                }
-            } else {
-                updateChart([]);
-                updateWheelTable([]);
-            }
-
-            updateFrameChart(frameResults);
-            updateFrameTable(frameResults);
-            
-            updateBikeSummary(wheelResults, frameResults);
-            
-            calculateFuelingPlan(inputs.distance, inputs.avgSpeed, inputs.power);
-            
-            const profile = document.getElementById('courseProfile').value;
-            updateTrainingPlan();
-            
-        } catch (e) {
-            console.error("Calculation error:", e);
-        }
-    }
-
-    function updateBikeSummary(wheelResults, frameResults) {
-        const bikeSummary = document.getElementById('bikeSummary');
+        const selectedBikeTypes = Array.from(document.querySelectorAll('#bikeTypeFilters .filter-chip.active'))
+            .map(chip => chip.dataset.bikeType);
         
-        if (frameResults.length === 0) {
-            bikeSummary.innerHTML = '<strong>Best Equipment:</strong> No frames available for selected bike types';
+        if (selectedBikeTypes.length === 0) {
+            document.getElementById('bikeSummary').innerHTML = '<strong>Best Equipment:</strong> Please select at least one bike type';
             return;
         }
+
+        const routeSelect = document.getElementById('routeSelect');
+        const selectedRouteName = routeSelect.value;
+        let selectedRoute = null;
         
-        const bestFrame = frameResults[0];
-        const frames = getBikeFrames();
-        const frameData = frames.find(f => f.name === bestFrame.name);
+        if (selectedRouteName !== 'custom') {
+            selectedRoute = window.routes.find(r => r.name === selectedRouteName);
+        }
+
+        const metersPerKm = (inputs.elevation / inputs.distance);
+        const climbingImportance = Math.min(metersPerKm / 20, 0.95);
         
-        if (frameData && frameData.noWheels) {
-            bikeSummary.innerHTML = `
-                <strong>Best Equipment:</strong> 
-                ${bestFrame.name} (Level ${bestFrame.currentLevel}) - All-in-one bike (no wheels)
-                <span class="badge badge-warning"><i class="fas fa-exclamation-circle"></i> All-in-One</span>
-            `;
-        } else {
-            if (wheelResults.length === 0) {
-                bikeSummary.innerHTML = '<strong>Best Equipment:</strong> No wheels match your filters';
-                return;
+        const baseTime = (inputs.distance / inputs.avgSpeed) * 3600;
+        
+        let wheels = getWheels();
+        wheels = applyActiveFilters(wheels);
+        
+        const wheelResults = wheels.map(wheel => {
+            const wheelPerf = wheel.performance.road;
+            
+            const hasPerformanceForSelectedType = selectedBikeTypes.some(type => 
+                wheel.performance[type] !== undefined
+            );
+            
+            if (!hasPerformanceForSelectedType) {
+                return null;
             }
             
-            const bestWheel = wheelResults[0];
-            bikeSummary.innerHTML = `
-                <strong>Best Equipment:</strong> 
-                ${bestFrame.name} (Level ${bestFrame.currentLevel}) + ${bestWheel.name} = 
-                ${(bestFrame.totalSavings + bestWheel.totalSavings).toFixed(1)}s total savings
-            `;
+            const weightFactor = Math.pow(inputs.weight / 75, 0.7); 
+            const powerFactor = Math.min(1 + (inputs.powerPercentage - 1) * 0.5, 1.5);
+            
+            let totalFlatSavings = 0;
+            let totalClimbSavings = 0;
+            
+            selectedBikeTypes.forEach(type => {
+                const typePerf = wheel.performance[type] || wheel.performance.road;
+                totalFlatSavings += typePerf.flat * (1 - climbingImportance) * baseTime / 3600 / weightFactor * powerFactor;
+                totalClimbSavings += typePerf.climb * climbingImportance * baseTime / 3600 / (weightFactor * 1.2);
+            });
+            
+            const avgFlatSavings = totalFlatSavings / selectedBikeTypes.length;
+            const avgClimbSavings = totalClimbSavings / selectedBikeTypes.length;
+            const totalSavings = avgFlatSavings + avgClimbSavings;
+            
+            return {
+                name: wheel.name,
+                brand: wheel.brand,
+                flatSavings: avgFlatSavings,
+                climbSavings: avgClimbSavings,
+                totalSavings,
+                custom: wheel.custom || false
+            };
+        }).filter(wheel => wheel !== null).sort((a, b) => b.totalSavings - a.totalSavings);
+        
+        let frames = getBikeFrames();
+        frames = applyFrameFilters(frames);
+        frames = frames.filter(frame => selectedBikeTypes.includes(frame.type));
+        
+        const frameResults = frames.map(frame => {
+            const currentLevel = frameLevels[frame.name] || 0;
+            const currentStats = getFrameStatsAtLevel(frame, currentLevel);
+            
+            const weightFactor = Math.pow(inputs.weight / 75, 0.7);
+            const powerFactor = Math.min(1 + (inputs.powerPercentage - 1) * 0.5, 1.5);
+            
+            const currentFlatSavings = currentStats.flat * (1 - climbingImportance) * baseTime / 3600 / weightFactor * powerFactor;
+            const currentClimbSavings = currentStats.climb * climbingImportance * baseTime / 3600 / (weightFactor * 1.2);
+            const currentTotalSavings = currentFlatSavings + currentClimbSavings;
+            
+            let nextLevelGain = 0;
+            if (currentLevel < 5) {
+                const nextStats = getFrameStatsAtLevel(frame, currentLevel + 1);
+                const nextFlatSavings = nextStats.flat * (1 - climbingImportance) * baseTime / 3600 / weightFactor * powerFactor;
+                const nextClimbSavings = nextStats.climb * climbingImportance * baseTime / 3600 / (weightFactor * 1.2);
+                const nextTotalSavings = nextFlatSavings + nextClimbSavings;
+                nextLevelGain = nextTotalSavings - currentTotalSavings;
+            }
+            
+            return {
+                name: frame.name,
+                currentLevel,
+                flatSavings: currentFlatSavings,
+                climbSavings: currentClimbSavings,
+                totalSavings: currentTotalSavings,
+                nextLevelGain
+            };
+        }).sort((a, b) => b.totalSavings - a.totalSavings);
+
+        // Store results for race plan
+        lastWheelResults = wheelResults;
+        lastFrameResults = frameResults;
+
+        const framesData = getBikeFrames();
+        const bestFrameData = framesData.find(f => f.name === frameResults[0]?.name);
+
+  
+
+        if (!(bestFrameData && bestFrameData.noWheels)) {
+            updateChart(wheelResults);
+            updateWheelTable(wheelResults);
+            
+            if (wheelResults.length > 0) {
+                highlightWheel(wheelResults[0].name, true);
+            }
+        } else {
+            updateChart([]);
+            updateWheelTable([]);
         }
+
+        updateFrameChart(frameResults);
+        updateFrameTable(frameResults);
+        
+        updateBikeSummary(wheelResults, frameResults);
+		      // Initialize focus recommendation with default values
+        let focusSummaryHTML = '<strong>Focus Equipment:</strong> Select a focus in Course Details';
+
+        // Only proceed if we have valid results
+        if (wheelResults && wheelResults.length > 0 && frameResults && frameResults.length > 0) {
+            const courseFocus = document.getElementById('courseFocus').value;
+            
+            // Get focus recommendation (simplified)
+            const focusRecommendation = courseFocus === 'auto' 
+                ? window.bestCombination 
+                : getFocusEquipmentRecommendation(wheelResults, frameResults, courseFocus);
+
+            if (focusRecommendation) {
+                const profile = document.getElementById('courseProfile').value;
+                const focusName = courseFocus === 'auto' 
+                    ? `Auto (matches ${profile} profile)` 
+                    : courseFocus.charAt(0).toUpperCase() + courseFocus.slice(1);
+                
+                const focusTotal = focusRecommendation.frame.totalSavings + focusRecommendation.wheel.totalSavings;
+                
+                // Only show difference if not auto and equipment is different
+                let differenceText = '';
+                if (courseFocus !== 'auto' && 
+                    (focusRecommendation.frame.name !== window.bestCombination.frame.name || 
+                     focusRecommendation.wheel.name !== window.bestCombination.wheel.name)) {
+                    const difference = focusTotal - window.bestCombination.totalSavings;
+                    differenceText = difference >= 0 
+                        ? ` (+${difference.toFixed(1)}s gain)` 
+                        : ` (${Math.abs(difference.toFixed(1))}s loss)`;
+                }
+                
+                const ratios = courseFocus === 'auto' 
+                    ? getDynamicRatios() 
+                    : getFocusRatios(courseFocus);
+                
+                focusSummaryHTML = `
+                    <strong>Focus Equipment (${focusName}):</strong> 
+                    ${focusRecommendation.frame.name} (Level ${focusRecommendation.frame.currentLevel}) + 
+                    ${focusRecommendation.wheel.name} = 
+                    ${focusTotal.toFixed(1)}s${differenceText}<br>
+                    <small>
+                        ${Math.round(ratios.flatRatio * 100)}% flat / 
+                        ${Math.round(ratios.climbRatio * 100)}% climb focus
+                    </small>
+                `;
+            }
+        }
+
+        // Update the UI
+        document.getElementById('focusEquipmentSummary').innerHTML = focusSummaryHTML;
+        
+        calculateFuelingPlan(inputs.distance, inputs.avgSpeed, inputs.power);
+        
+        const profile = document.getElementById('courseProfile').value;
+        updateTrainingPlan();
+        
+    } catch (e) {
+        console.error("Calculation error:", e);
     }
+}
+
+  function updateBikeSummary(wheelResults, frameResults) {
+    const bikeSummary = document.getElementById('bikeSummary');
+    
+    // Initialize empty best combination
+    window.bestCombination = {
+        frame: { name: '', totalSavings: 0, currentLevel: 0 },
+        wheel: { name: '', totalSavings: 0 },
+        totalSavings: 0
+    };
+    
+    if (frameResults.length === 0) {
+        bikeSummary.innerHTML = '<strong>Best Equipment:</strong> No frames available for selected bike types';
+        return;
+    }
+    
+    const bestFrame = frameResults[0];
+    const bestWheel = wheelResults.length > 0 ? wheelResults[0] : { name: 'No wheels', totalSavings: 0 };
+    const frames = getBikeFrames();
+    const frameData = frames.find(f => f.name === bestFrame.name);
+    
+    // Update best combination
+    window.bestCombination = {
+        frame: bestFrame,
+        wheel: bestWheel,
+        totalSavings: bestFrame.totalSavings + bestWheel.totalSavings
+    };
+    
+    if (frameData && frameData.noWheels) {
+        bikeSummary.innerHTML = `
+            <strong>Best Equipment:</strong> 
+            ${bestFrame.name} (Level ${bestFrame.currentLevel}) - All-in-one bike (no wheels)
+            <span class="badge badge-warning"><i class="fas fa-exclamation-circle"></i> All-in-One</span>
+        `;
+    } else {
+        bikeSummary.innerHTML = `
+            <strong>Best Equipment:</strong> 
+            ${bestFrame.name} (Level ${bestFrame.currentLevel}) + ${bestWheel.name} = 
+            ${(bestFrame.totalSavings + bestWheel.totalSavings).toFixed(1)}s total savings
+        `;
+    }
+}
 
     // ===== Filter Functions =====
     function applyFrameFilters(frames) {
@@ -3459,72 +3512,7 @@ function initPacingChart(data, planType, raceStyle, isHilly) {
         calculate();
     }
 
-    // ===== Wheel Management =====
-    function addWheel() {
-        try {
-            const wheelName = document.getElementById('wheelName').value.trim();
-            const wheelBrand = document.getElementById('wheelBrand').value.trim();
-            const wheelFlat = parseFloat(document.getElementById('wheelFlat').value);
-            const wheelClimb = parseFloat(document.getElementById('wheelClimb').value);
-            const selectedBikeTypes = Array.from(document.querySelectorAll('#bikeTypeFilters .filter-chip.active'))
-                .map(chip => chip.dataset.bikeType);
-
-            if (!wheelName || isNaN(wheelFlat) || isNaN(wheelClimb)) {
-                alert("Please fill in all required fields with valid values.");
-                return;
-            }
-
-            const performance = {};
-            selectedBikeTypes.forEach(type => {
-                performance[type] = {
-                    flat: wheelFlat,
-                    climb: wheelClimb
-                };
-            });
-            
-            const newWheel = { 
-                name: wheelName, 
-                brand: wheelBrand,
-                type: "allround",
-                performance: performance,
-                bikeType: selectedBikeTypes,
-                custom: true 
-            };
-            
-            window.wheels.push(newWheel);
-            
-            const customWheels = window.wheels.filter(w => w.custom);
-            localStorage.setItem('customWheels', JSON.stringify(customWheels));
-
-            clearCustomForm();
-            calculate();
-            populateBrandFilters();
-        } catch (e) {
-            console.error("Error adding wheel:", e);
-        }
-    }
-
-    function removeWheel(wheelName) {
-        try {
-            window.wheels = window.wheels.filter(wheel => wheel.name !== wheelName);
-            
-            const customWheels = window.wheels.filter(w => w.custom);
-            localStorage.setItem('customWheels', JSON.stringify(customWheels));
-            
-            calculate();
-            populateBrandFilters();
-        } catch (e) {
-            console.error("Error removing wheel:", e);
-        }
-    }
-
-    function clearCustomForm() {
-        document.getElementById('wheelName').value = '';
-        document.getElementById('wheelBrand').value = '';
-        document.getElementById('wheelFlat').value = '';
-        document.getElementById('wheelClimb').value = '';
-    }
-
+  
     // ===== Frame Level Management =====
     function populateFrameLevelsTable() {
         const tableBody = document.querySelector('#frameLevelsTable tbody');
@@ -3658,11 +3646,11 @@ function initPacingChart(data, planType, raceStyle, isHilly) {
                         }
                     },
                     onClick: (e, elements) => {
-                        if (elements.length > 0) {
-                            const index = elements[0].index;
-                            const wheelName = results[index].name;
-                            highlightWheel(wheelName);
-                        }
+						if (elements.length > 0) {
+							const index = elements[0].index;
+							const wheelName = results[index].name;
+							highlightWheel(wheelName);
+						}
                     }
                 }
             });
@@ -3735,12 +3723,12 @@ function initPacingChart(data, planType, raceStyle, isHilly) {
                         }
                     }
                 },
-                onClick: (e, elements) => {
-                    if (elements.length > 0) {
-                        const index = elements[0].index;
-                        const frameName = frameResults[index].name;
-                        highlightFrame(frameName);
-                    }
+				onClick: (e, elements) => {
+					if (elements.length > 0) {
+						const index = elements[0].index;
+						const frameName = frameResults[index].name;
+						highlightFrame(frameName);
+					}
                 }
             }
         });
@@ -3749,44 +3737,55 @@ function initPacingChart(data, planType, raceStyle, isHilly) {
     }
 }
 
-function highlightWheel(wheelName, preventScroll = false) {
+function highlightWheel(wheelName) {
+    // Clear previous selections from wheel table
     document.querySelectorAll('#wheelResultsTable tr').forEach(row => {
         row.classList.remove('selected');
     });
     
+    // Find and highlight the selected row in the table
     const rows = document.querySelectorAll('#wheelResultsTable tr');
     for (let i = 0; i < rows.length; i++) {
         if (rows[i].textContent.includes(wheelName)) {
             rows[i].classList.add('selected');
-            if (!preventScroll) {
-                rows[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
             break;
         }
     }
     
+    // Set the selected wheel from last results
+    const wheelResults = getLastWheelResults();
+    selectedWheel = wheelResults ? wheelResults.find(w => w.name === wheelName) : null;
+    
+    // Update the selected equipment display
+    updateSelectedEquipment();
+    
+    // Update chart highlighting if chart exists
     if (wheelChart) {
-        wheelChart.data.datasets[0].backgroundColor = wheelChart.data.labels.map((label, i) => 
-            i === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
-        );
-        wheelChart.data.datasets[1].backgroundColor = wheelChart.data.labels.map((label, i) => 
-            i === 0 ? 'rgba(231, 76, 60, 0.8)' : 'rgba(231, 76, 60, 0.6)'
-        );
+        // Reset all bars to default colors
+        wheelChart.data.datasets.forEach(dataset => {
+            dataset.backgroundColor = dataset.backgroundColor.map((color, i) => {
+                const isSelected = wheelChart.data.labels[i] === wheelName;
+                
+                // Different colors for flat vs climb datasets
+                if (dataset.label === 'Flat Savings') {
+                    return isSelected ? 'rgba(241, 196, 15, 0.8)' : 'rgba(52, 152, 219, 0.6)';
+                } else { // Climb Savings
+                    return isSelected ? 'rgba(231, 76, 60, 0.8)' : 'rgba(231, 76, 60, 0.6)';
+                }
+            });
+        });
         
-        const wheelIndex = wheelChart.data.labels.indexOf(wheelName);
-        if (wheelIndex >= 0) {
-            wheelChart.data.datasets[0].backgroundColor[wheelIndex] = 'rgba(241, 196, 15, 0.8)';
-            wheelChart.data.datasets[1].backgroundColor[wheelIndex] = 'rgba(231, 76, 60, 0.8)';
-            wheelChart.update();
-        }
+        wheelChart.update();
     }
 }
 
 function highlightFrame(frameName) {
+    // Clear previous selections from frame table
     document.querySelectorAll('#frameResultsTable tr').forEach(row => {
         row.classList.remove('selected');
     });
-    
+
+    // Find and highlight the selected row in the table
     const rows = document.querySelectorAll('#frameResultsTable tr');
     for (let i = 0; i < rows.length; i++) {
         if (rows[i].textContent.includes(frameName)) {
@@ -3794,35 +3793,109 @@ function highlightFrame(frameName) {
             break;
         }
     }
-    
+
+    // Set the selected frame from last results
+    const frameResults = getLastFrameResults();
+    selectedFrame = frameResults ? frameResults.find(f => f.name === frameName) : null;
+
+    // Update the selected equipment display
+    updateSelectedEquipment();
+
+    // Update chart highlighting if chart exists
     if (frameChart) {
+        // Highlight selected frame in chart
         frameChart.data.datasets[0].backgroundColor = frameChart.data.labels.map((label, i) => 
-            i === 0 ? 'rgba(52, 152, 219, 0.8)' : 'rgba(52, 152, 219, 0.6)'
+            label === frameName ? 'rgba(241, 196, 15, 0.8)' : 'rgba(52, 152, 219, 0.6)'
         );
+
+        frameChart.update();
+    }
+}
+// Add this new function to update the selected equipment display
+function updateSelectedEquipment() {
+    const selectedSummary = document.getElementById('selectedEquipmentSummary');
+    
+    if (!selectedWheel && !selectedFrame) {
+        selectedSummary.innerHTML = '<strong>Selected Equipment:</strong> Click on a wheel or frame in the charts/tables to select';
+        return;
+    }
+    
+    let html = '<strong>Selected Equipment:</strong> ';
+    
+    if (selectedFrame) {
+        html += `${selectedFrame.name} (Level ${selectedFrame.currentLevel})`;
+    } else {
+        html += 'No frame selected';
+    }
+    
+    html += ' + ';
+    
+    if (selectedWheel) {
+        html += selectedWheel.name;
+    } else {
+        html += 'No wheel selected';
+    }
+    
+    // Only show comparison if we have both selections
+    if (selectedWheel && selectedFrame) {
+        const selectedTotal = selectedFrame.totalSavings + selectedWheel.totalSavings;
         
-        const frameIndex = frameChart.data.labels.indexOf(frameName);
-        if (frameIndex >= 0) {
-            frameChart.data.datasets[0].backgroundColor[frameIndex] = 'rgba(241, 196, 15, 0.8)';
-            frameChart.update();
+        // Compare with best combination
+        const bestDiff = selectedTotal - window.bestCombination.totalSavings;
+        const bestComparison = getComparisonText(bestDiff);
+        
+        // Compare with focus equipment if available
+        const courseFocus = document.getElementById('courseFocus').value;
+        const focusRecommendation = courseFocus === 'auto' ? 
+            window.bestCombination : 
+            getFocusEquipmentRecommendation(getLastWheelResults(), getLastFrameResults(), courseFocus);
+            
+        let focusComparison = '';
+        if (focusRecommendation && focusRecommendation !== window.bestCombination) {
+            const focusTotal = focusRecommendation.frame.totalSavings + focusRecommendation.wheel.totalSavings;
+            const focusDiff = selectedTotal - focusTotal;
+            focusComparison = getComparisonText(focusDiff, 'focus');
         }
+        
+        html += `
+            <div class="equipment-comparison">
+                <div>vs Best: ${bestComparison}</div>
+                ${focusComparison ? `<div>vs Focus: ${focusComparison}</div>` : ''}
+            </div>
+        `;
+    }
+    
+    selectedSummary.innerHTML = html;
+}
+
+// Helper function for comparison text
+function getComparisonText(diff, type = 'best') {
+    const absDiff = Math.abs(diff);
+    const formattedDiff = absDiff.toFixed(1);
+    
+    if (diff > 0) {
+        return `<span class="better">+${formattedDiff}s better</span> than ${type}`;
+    } else if (diff < 0) {
+        return `<span class="worse">${formattedDiff}s worse</span> than ${type}`;
+    } else {
+        return `<span class="same">same as ${type}</span>`;
     }
 }
 
 function updateWheelTable(results) {
     try {
-        const table = document.getElementById('wheelResults');
+        const table = document.getElementById('wheelResultsTable');
         table.innerHTML = `
             <tr>
                 <th>Rank</th>
                 <th>Wheel</th>
                 <th>Time Savings</th>
-                <th>Actions</th>
             </tr>
         `;
         
         if (!results || results.length === 0) {
             const row = document.createElement('tr');
-            row.innerHTML = `<td colspan="4" class="text-center">No wheels match your filters</td>`;
+            row.innerHTML = `<td colspan="3" class="text-center">No wheels match your filters</td>`;
             table.appendChild(row);
             return;
         }
@@ -3830,17 +3903,11 @@ function updateWheelTable(results) {
         results.slice(0, 10).forEach((wheel, index) => {
             const row = document.createElement('tr');
             row.dataset.wheelName = wheel.name;
+            row.onclick = () => highlightWheel(wheel.name);
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${wheel.name} ${wheel.brand ? `(${wheel.brand})` : ''}</td>
                 <td>${wheel.totalSavings.toFixed(1)}s</td>
-                <td>
-                    ${wheel.custom ? 
-                        `<button class="btn btn-sm btn-danger" onclick="removeWheel('${wheel.name}')">
-                            <i class="fas fa-trash"></i> Remove
-                        </button>` : 
-                        ''}
-                </td>
             `;
             table.appendChild(row);
         });
@@ -3851,7 +3918,7 @@ function updateWheelTable(results) {
 
 function updateFrameTable(results) {
     try {
-        const table = document.getElementById('frameResults');
+        const table = document.getElementById('frameResultsTable');
         table.innerHTML = `
             <tr>
                 <th>Rank</th>
@@ -3872,6 +3939,7 @@ function updateFrameTable(results) {
         results.slice(0, 10).forEach((frame, index) => {
             const row = document.createElement('tr');
             row.dataset.frameName = frame.name;
+            row.onclick = () => highlightFrame(frame.name);
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${frame.name}</td>
@@ -3881,12 +3949,39 @@ function updateFrameTable(results) {
             `;
             table.appendChild(row);
         });
+
+        // Automatically highlight the first entry
+        if (results.length > 0) {
+            highlightFrame(results[0].name);
+        }
     } catch (e) {
         console.error("Error updating frame table:", e);
     }
 }
 
     // ===== Utility Functions =====
+	function getFocusRatios(focus) {
+    // Return dynamic ratios for auto
+    if (focus === 'auto') {
+        return getDynamicRatios();
+    }
+    
+    // Manual selection overrides
+    switch(focus) {
+        case 'mountainous':
+            return { flatRatio: 0.1, climbRatio: 0.9 };
+        case 'hilly':
+            return { flatRatio: 0.3, climbRatio: 0.7 };
+        case 'rolling':
+            return { flatRatio: 0.5, climbRatio: 0.5 };
+        case 'flat':
+            return { flatRatio: 0.9, climbRatio: 0.1 };
+        default:
+            return { flatRatio: 0.5, climbRatio: 0.5 }; // fallback
+    }
+}
+
+	
     function parseInput(id) {
         const value = parseFloat(document.getElementById(id).value);
         return isNaN(value) ? 0 : value;
@@ -3899,106 +3994,68 @@ function updateFrameTable(results) {
         return `${hours}h ${minutes}m ${secs}s`;
     }
 
-    function resetInputs() {
-        localStorage.removeItem('userSettings');
-        document.getElementById('distance').value = '30';
-        document.getElementById('elevation').value = '150';
-        document.getElementById('weight').value = '75';
-        document.getElementById('height').value = '175';
-        document.getElementById('ftp').value = '300';
-        document.getElementById('powerRange').value = '100';
-        document.getElementById('powerRangeValue').textContent = '100%';
-        document.getElementById('power').value = '300';
-        document.getElementById('avgSpeed').value = '30';
-        document.getElementById('courseProfile').value = 'flat';
-        document.getElementById('routeSelect').value = 'custom';
-        document.getElementById('worldSelect').value = 'all';
-        document.getElementById('laps').value = '1';
-        
-        if (!isMetric) {
-            toggleUnits();
+   function resetInputs() {
+    // Create a custom confirmation dialog
+    const dialog = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: flex; justify-content: center; align-items: center;">
+            <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px;">
+                <h3>Reset Options</h3>
+                <p>What would you like to reset?</p>
+                <button onclick="fullReset()" class="btn btn-danger" style="margin: 5px;">Reset Everything</button>
+                <button onclick="partialReset()" class="btn btn-warning" style="margin: 5px;">Keep Rider Details</button>
+                <button onclick="this.parentNode.parentNode.remove()" class="btn btn-secondary" style="margin: 5px;">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', dialog);
+}
+
+function fullReset() {
+    // Remove saved rider details too
+    localStorage.removeItem('userSettings');
+    location.reload(); // Full refresh to ensure clean state
+}
+
+function partialReset() {
+    // Save current rider details
+    const currentWeight = document.getElementById('weight').value;
+    const currentHeight = document.getElementById('height').value;
+    const currentFTP = document.getElementById('ftp').value;
+    
+    // Reset everything
+    document.getElementById('distance').value = '30';
+    document.getElementById('elevation').value = '150';
+    document.getElementById('powerRange').value = '100';
+    document.getElementById('powerRangeValue').textContent = '100%';
+    document.getElementById('power').value = currentFTP;
+    document.getElementById('avgSpeed').value = '30';
+    document.getElementById('courseProfile').value = 'flat';
+    document.getElementById('routeSelect').value = 'custom';
+    document.getElementById('worldSelect').value = 'all';
+    document.getElementById('laps').value = '1';
+    document.getElementById('courseFocus').value = 'auto';
+    
+    // Restore rider details
+    document.getElementById('weight').value = currentWeight;
+    document.getElementById('height').value = currentHeight;
+    document.getElementById('ftp').value = currentFTP;
+    
+    // Reset bike type filters
+    const bikeTypeChips = document.querySelectorAll('#bikeTypeFilters .filter-chip');
+    bikeTypeChips.forEach(chip => {
+        chip.classList.remove('active');
+        if (chip.dataset.bikeType === 'road') {
+            chip.classList.add('active');
         }
-
-        const bikeTypeChips = document.querySelectorAll('#bikeTypeFilters .filter-chip');
-        bikeTypeChips.forEach(chip => {
-            chip.classList.remove('active');
-            if (chip.dataset.bikeType === 'road') {
-                chip.classList.add('active');
-            }
-        });
-        document.querySelector('.bike-type-select-all').textContent = 'Deselect All';
-        
-        calculate();
-        updateSpeedTimeChart();
-    }
-
-    // ===== Unit Conversion =====
-    document.getElementById('unitToggle').addEventListener('click', toggleUnits);
-
-    function toggleUnits() {
-        isMetric = !isMetric;
-        updateUnitDisplay();
-        convertValues();
-        saveUserSettings();
-        calculate();
-    }
-
-    function updateUnitDisplay() {
-        const labels = {
-            distance: ['km', 'mi'],
-            elevation: ['m', 'ft'],
-            weight: ['kg', 'lb']
-        };
-
-        Object.entries(labels).forEach(([id, units]) => {
-            document.getElementById(`${id}Label`).textContent = 
-                `${id.charAt(0).toUpperCase() + id.slice(1)} (${units[isMetric ? 0 : 1]})`;
-        });
-
-        const metricHeightGroup = document.querySelector('.metric-height');
-        const imperialHeightGroup = document.querySelector('.imperial-height');
-        if (isMetric) {
-            metricHeightGroup.style.display = 'flex';
-            imperialHeightGroup.style.display = 'none';
-        } else {
-            metricHeightGroup.style.display = 'none';
-            imperialHeightGroup.style.display = 'flex';
-        }
-
-        const toggle = document.getElementById('unitToggle');
-        toggle.classList.toggle('imperial', !isMetric);
-        document.getElementById('unitLabel').textContent = isMetric ? 'Metric' : 'Imperial';
-    }
-
-    function convertValues() {
-        const elements = [
-            { id: 'distance', factor: conversion.milesToKm },
-            { id: 'elevation', factor: conversion.feetToM },
-            { id: 'weight', factor: conversion.lbToKg }
-        ];
-
-        elements.forEach(({ id, factor }) => {
-            const element = document.getElementById(id);
-            let value = parseFloat(element.value);
-            value = isMetric ? value * factor : value / factor;
-            element.value = value.toFixed(1);
-        });
-
-        if (isMetric) {
-            const feet = parseFloat(document.getElementById('heightFeet').value) || 0;
-            const inches = parseFloat(document.getElementById('heightInches').value) || 0;
-            const totalInches = feet * 12 + inches;
-            const cm = totalInches * conversion.inToCm;
-            document.getElementById('height').value = cm.toFixed(0);
-        } else {
-            const cm = parseFloat(document.getElementById('height').value) || 0;
-            const totalInches = cm / conversion.inToCm;
-            const feet = Math.floor(totalInches / 12);
-            const inches = totalInches % 12;
-            document.getElementById('heightFeet').value = feet.toFixed(0);
-            document.getElementById('heightInches').value = inches.toFixed(1);
-        }
-    }
+    });
+    
+    // Close the dialog
+    document.querySelector('[style*="position: fixed; top: 0"]').remove();
+    
+    calculate();
+    updateSpeedTimeChart();
+}
 
     // ===== Filter Management =====
     function populateBrandFilters() {
