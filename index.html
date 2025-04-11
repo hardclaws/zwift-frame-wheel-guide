@@ -1960,28 +1960,33 @@
     }
 
     function saveUserSettings() {
-        const settings = {
-            weight: document.getElementById('weight').value,
-            height: document.getElementById('height').value,
-            ftp: document.getElementById('ftp').value,
-            power: document.getElementById('power').value,
-            powerRange: document.getElementById('powerRange').value,
-            distance: document.getElementById('distance').value,
-            elevation: document.getElementById('elevation').value,
-            avgSpeed: document.getElementById('avgSpeed').value,
-            courseProfile: document.getElementById('courseProfile').value,
-            laps: document.getElementById('laps').value,
-            routeSelect: document.getElementById('routeSelect').value,
-            worldSelect: document.getElementById('worldSelect').value
-        };
-        localStorage.setItem('userSettings', JSON.stringify(settings));
-    }
+    const settings = {
+        weight: document.getElementById('weight').value,
+        height: document.getElementById('height').value,
+        ftp: document.getElementById('ftp').value,
+        power: document.getElementById('power').value,
+        powerRange: document.getElementById('powerRange').value,
+        distance: document.getElementById('distance').value,
+        elevation: document.getElementById('elevation').value,
+        avgSpeed: document.getElementById('avgSpeed').value,
+        courseProfile: document.getElementById('courseProfile').value,
+        laps: document.getElementById('laps').value,
+        routeSelect: document.getElementById('routeSelect').value,
+        worldSelect: document.getElementById('worldSelect').value,
+        courseFocus: document.getElementById('courseFocus').value,
+        // Save bike type filter states
+        bikeTypeFilters: Array.from(document.querySelectorAll('#bikeTypeFilters .filter-chip.active'))
+            .map(chip => chip.dataset.bikeType)
+    };
+    localStorage.setItem('userSettings', JSON.stringify(settings));
+}
 
    function loadUserSettings() {
     const savedSettings = localStorage.getItem('userSettings');
     if (savedSettings) {
         const settings = JSON.parse(savedSettings);
         
+        // Load basic settings
         document.getElementById('weight').value = settings.weight || '75';
         document.getElementById('height').value = settings.height || '175';
         document.getElementById('ftp').value = settings.ftp || '300';
@@ -1994,6 +1999,14 @@
         document.getElementById('courseProfile').value = settings.courseProfile || 'flat';
         document.getElementById('laps').value = settings.laps || '1';
         document.getElementById('courseFocus').value = settings.courseFocus || 'auto';
+        
+        // Load bike type filters if they exist
+        if (settings.bikeTypeFilters) {
+            document.querySelectorAll('#bikeTypeFilters .filter-chip').forEach(chip => {
+                chip.classList.toggle('active', 
+                    settings.bikeTypeFilters.includes(chip.dataset.bikeType));
+            });
+        }
         
         // Restore world selection first
         if (settings.worldSelect) {
@@ -2013,10 +2026,10 @@
             document.getElementById('routeSelect').value = 'custom';
         }
             
-            // Update power zone display
-            updatePowerZone();
-        }
+        // Update power zone display
+        updatePowerZone();
     }
+}
 
     // ===== Frame Calculation Functions =====
     function getFrameStatsAtLevel(frame, level) {
@@ -4049,6 +4062,9 @@ function partialReset() {
             chip.classList.add('active');
         }
     });
+    
+    // Save these reset values to localStorage
+    saveUserSettings();
     
     // Close the dialog
     document.querySelector('[style*="position: fixed; top: 0"]').remove();
