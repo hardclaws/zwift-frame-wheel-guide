@@ -932,42 +932,42 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="main-content" id="mainContent">
-            <div class="container">
-                <h1>
-                    <i class="fas fa-bicycle"></i> Zwift Wheel Optimizer Pro
-                </h1>
-                
-                <div class="card">
-                    <div class="tabs" id="mainTabs">
-                        <button class="tab-btn active" onclick="openTab('optimizer')">
-                            <i class="fas fa-tachometer-alt"></i> Optimizer
-                        </button>
-                        <button class="tab-btn" onclick="openTab('frameLevels')">
-                            <i class="fas fa-bicycle"></i> Frame Levels
-                        </button>
-                        <button class="tab-btn" onclick="openTab('training')">
-                            <i class="fas fa-dumbbell"></i> Training Plan
-                        </button>
-                        <button class="tab-btn" onclick="openTab('racePlan')">
-                            <i class="fas fa-flag-checkered"></i> Race/Ride Plan
-                        </button>
-                        <button class="tab-btn" onclick="openTab('tutorial')">
-                            <i class="fas fa-graduation-cap"></i> Tutorial
-                        </button>
-                        <button class="tab-btn" onclick="openTab('about')">
-                            <i class="fas fa-info-circle"></i> About
-                        </button>
-                    <div class="tab-actions">
-                        <button class="btn btn-sm btn-primary" onclick="calculate()">
-                            <i class="fas fa-calculator"></i> Calculate
-                        </button>
-                        <button class="btn btn-sm btn-secondary" onclick="resetInputs()">
-                            <i class="fas fa-redo"></i> Reset
-                        </button>
-                    </div>
-                        <div class="tab-indicator" id="tabIndicator"></div>
-                    </div>
+       <div class="main-content" id="mainContent">
+    <div class="container">
+        <h1>
+            <i class="fas fa-bicycle"></i> Zwift Wheel Optimizer Pro
+        </h1>
+        
+        <div class="card">
+            <div class="tabs" id="mainTabs">
+                <button class="tab-btn active" onclick="openTab('optimizer')">
+                    <i class="fas fa-tachometer-alt"></i> Optimizer
+                </button>
+                <button class="tab-btn" onclick="openTab('frameLevels')">
+                    <i class="fas fa-bicycle"></i> Frame Levels
+                </button>
+                <button class="tab-btn" onclick="openTab('training')">
+                    <i class="fas fa-dumbbell"></i> Training Plan
+                </button>
+                <button class="tab-btn" onclick="openTab('racePlan')">
+                    <i class="fas fa-flag-checkered"></i> Race/Ride Plan
+                </button>
+                <button class="tab-btn" onclick="openTab('tutorial')">
+                    <i class="fas fa-graduation-cap"></i> Tutorial
+                </button>
+                <button class="tab-btn" onclick="openTab('about')">
+                    <i class="fas fa-info-circle"></i> About
+                </button>
+                <div class="tab-actions">
+                    <button class="btn btn-sm btn-primary" onclick="calculate()">
+                        <i class="fas fa-calculator"></i> Calculate
+                    </button>
+                    <button class="btn btn-sm btn-secondary" onclick="resetInputs()">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                <div class="tab-indicator" id="tabIndicator"></div>
+            </div>
 
                     <!-- Optimizer Tab -->
                     <div class="tab-content active" id="optimizer">
@@ -1342,9 +1342,9 @@
                                 </table>
                             </div>
                         </div>
-		</div>
-			
-<!-- Frame Levels Tab -->
+                    </div>
+
+    <!-- Frame Levels Tab -->
                     <div id="frameLevels" class="tab-content">
                         <div class="card">
                             <div class="card-header">
@@ -1713,71 +1713,71 @@
                         </div>
                     </div>
 
-<!-- About Tab -->
-<div id="about" class="tab-content">
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">
-                <i class="fas fa-info-circle"></i> About Zwift Wheel Optimizer Pro
-            </h2>
-        </div>
-        
-        <div class="grid grid-2">
-            <div class="card">
-                <h3>What is this tool?</h3>
-                <p>The Zwift Wheel Optimizer Pro is a comprehensive tool designed to help Zwift cyclists maximize their virtual performance by selecting the optimal equipment combinations for any given course.</p>
-                <p>It analyzes:</p>
-                <ul>
-                    <li>Rider characteristics (weight, height, power output)</li>
-                    <li>Course profile (distance, elevation, terrain)</li>
-                    <li>Equipment specifications (wheels, frames, levels)</li>
-                </ul>
-                <p>To provide personalized recommendations that can save you valuable seconds on your rides.</p>
-            </div>
-            
-            <div class="card">
-                <h3>How are calculations made?</h3>
-                <p>The optimizer uses a sophisticated algorithm that considers:</p>
-                <ul>
-                    <li><strong>Aerodynamics:</strong> More important on flat courses and at higher speeds</li>
-                    <li><strong>Weight:</strong> More important on hilly courses and for lighter riders</li>
-                    <li><strong>Power Output:</strong> Affects the relative importance of aero vs weight</li>
-                    <li><strong>Course Profile:</strong> Determines the balance between flat and climbing performance</li>
-                </ul>
-                <p>All calculations are based on publicly available data about Zwift's equipment performance characteristics.</p>
-            </div>
-            
-            <div class="card">
-                <h3>Data Sources</h3>
-                <p>The tool uses equipment data from:</p>
-                <ul>
-                    <li>Zwift Insider's equipment tests</li>
-                    <li>Community-collected performance data</li>
-                    <li>User-submitted custom wheel specifications</li>
-                </ul>
-                <p>All data is stored locally in your browser for privacy and performance.</p>
-            </div>
-            
-            <div class="card">
-                <h3>Connect With Me</h3>
-                <p>Created by a passionate Zwift cyclist to help the community optimize their virtual rides.</p>
-                <ul>
-                    <li><strong>Twitch:</strong> <a href="https://www.twitch.tv/hardclaws" target="_blank">twitch.tv/hardclaws</a></li>
-                    <li><strong>Email:</strong> <a href="mailto:thehardclaws@gmail.com">thehardclaws@gmail.com</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="card text-center">
-            <h3>Created with <img src="images/wattbomb.png" class="wattbomb-icon" alt="wattbomb"> by twitch.tv/hardclaws</h3>
-            <p>Version 1.0 | © 2025</p>
-            <div class="btn-group" style="justify-content: center;">
-                <a href="https://www.twitch.tv/hardclaws" class="btn btn-outline" target="_blank">
-                    <i class="fab fa-twitch"></i> Twitch
-                </a>
-                <a href="mailto:thehardclaws@gmail.com" class="btn btn-outline">
-                    <i class="fas fa-envelope"></i> Email
-                </a>
+                    <!-- About Tab -->
+                    <div id="about" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <i class="fas fa-info-circle"></i> About Zwift Wheel Optimizer Pro
+                                </h2>
+                            </div>
+                            
+                            <div class="grid grid-2">
+                                <div class="card">
+                                    <h3>What is this tool?</h3>
+                                    <p>The Zwift Wheel Optimizer Pro is a comprehensive tool designed to help Zwift cyclists maximize their virtual performance by selecting the optimal equipment combinations for any given course.</p>
+                                    <p>It analyzes:</p>
+                                    <ul>
+                                        <li>Rider characteristics (weight, height, power output)</li>
+                                        <li>Course profile (distance, elevation, terrain)</li>
+                                        <li>Equipment specifications (wheels, frames, levels)</li>
+                                    </ul>
+                                    <p>To provide personalized recommendations that can save you valuable seconds on your rides.</p>
+                                </div>
+                                
+                                <div class="card">
+                                    <h3>How are calculations made?</h3>
+                                    <p>The optimizer uses a sophisticated algorithm that considers:</p>
+                                    <ul>
+                                        <li><strong>Aerodynamics:</strong> More important on flat courses and at higher speeds</li>
+                                        <li><strong>Weight:</strong> More important on hilly courses and for lighter riders</li>
+                                        <li><strong>Power Output:</strong> Affects the relative importance of aero vs weight</li>
+                                        <li><strong>Course Profile:</strong> Determines the balance between flat and climbing performance</li>
+                                    </ul>
+                                    <p>All calculations are based on publicly available data about Zwift's equipment performance characteristics.</p>
+                                </div>
+                                
+                                <div class="card">
+                                    <h3>Data Sources</h3>
+                                    <p>The tool uses equipment data from:</p>
+                                    <ul>
+                                        <li>Zwift Insider's equipment tests</li>
+                                        <li>Community-collected performance data</li>
+                                        <li>User-submitted custom wheel specifications</li>
+                                    </ul>
+                                    <p>All data is stored locally in your browser for privacy and performance.</p>
+                                </div>
+                                
+                                <div class="card">
+                                    <h3>Connect With Me</h3>
+                                    <p>Created by a passionate Zwift cyclist to help the community optimize their virtual rides.</p>
+                                    <ul>
+                                        <li><strong>Twitch:</strong> <a href="https://www.twitch.tv/hardclaws" target="_blank">twitch.tv/hardclaws</a></li>
+                                        <li><strong>Email:</strong> <a href="mailto:thehardclaws@gmail.com">thehardclaws@gmail.com</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="card text-center">
+                                <h3>Created with <img src="images/wattbomb.png" class="wattbomb-icon" alt="wattbomb"> by twitch.tv/hardclaws</h3>
+                                <p>Version 1.0 | © 2025</p>
+                                <div class="btn-group" style="justify-content: center;">
+                                    <a href="https://www.twitch.tv/hardclaws" class="btn btn-outline" target="_blank">
+                                        <i class="fab fa-twitch"></i> Twitch
+                                    </a>
+                                    <a href="mailto:thehardclaws@gmail.com" class="btn btn-outline">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </a>
             </div>
         </div>
     </div>
@@ -1894,35 +1894,35 @@
 	
 	        // ===== Tab Navigation =====
         function openTab(tabId) {
-            // Update sidebar navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            document.querySelector(`.nav-link[onclick="openTab('${tabId}')"]`).classList.add('active');
-            
-            // Update main tabs
-            document.querySelectorAll('.tab-content').forEach(pane => {
-                pane.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.tab-btn').forEach(button => {
-                button.classList.remove('active');
-            });
-            
-            document.getElementById(tabId).classList.add('active');
-            document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
-            
-            // Update tab indicator
-            setupTabIndicator();
-            
-            // Special tab handling
-            if (tabId === 'frameLevels') {
-                populateFrameLevelsTable();
-            }
-            if (tabId === 'training') {
-                updateTrainingPlan();
-            }
-        }
+			// Update sidebar navigation
+			document.querySelectorAll('.nav-link').forEach(link => {
+				link.classList.remove('active');
+			});
+			document.querySelector(`.nav-link[onclick="openTab('${tabId}')"]`).classList.add('active');
+			
+			// Update main tabs
+			document.querySelectorAll('.tab-content').forEach(pane => {
+				pane.classList.remove('active');
+			});
+			
+			document.querySelectorAll('.tab-btn').forEach(button => {
+				button.classList.remove('active');
+			});
+			
+			document.getElementById(tabId).classList.add('active');
+			document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
+			
+			// Update tab indicator
+			setupTabIndicator();
+			
+			// Special tab handling
+			if (tabId === 'frameLevels') {
+				populateFrameLevelsTable();
+			}
+			if (tabId === 'training') {
+				updateTrainingPlan();
+			}
+		}
 
     // ===== Data Access Functions =====
     function getWheels() {
@@ -3820,7 +3820,7 @@ function highlightFrame(frameName) {
         }
     }
 
-    // Set the selected frame from last results
+    // Safely set the selected frame
     const frameResults = getLastFrameResults();
     selectedFrame = frameResults ? frameResults.find(f => f.name === frameName) : null;
 
@@ -3829,18 +3829,16 @@ function highlightFrame(frameName) {
 
     // Update chart highlighting if chart exists
     if (frameChart) {
-        // Highlight selected frame in chart
         frameChart.data.datasets[0].backgroundColor = frameChart.data.labels.map((label, i) => 
             label === frameName ? 'rgba(241, 196, 15, 0.8)' : 'rgba(52, 152, 219, 0.6)'
         );
-
         frameChart.update();
     }
 }
 // Add this new function to update the selected equipment display
 function updateSelectedEquipment() {
     const selectedSummary = document.getElementById('selectedEquipmentSummary');
-	selectedSummary.className = 'summary-box summary-selected';
+    selectedSummary.className = 'summary-box summary-selected';
     
     if (!selectedWheel && !selectedFrame) {
         selectedSummary.innerHTML = '<strong>Selected Equipment:</strong> Click on a wheel or frame in the charts/tables to select';
@@ -3849,25 +3847,18 @@ function updateSelectedEquipment() {
     
     let html = '<strong>Selected Equipment:</strong> ';
     
-    if (selectedFrame) {
-        html += `${selectedFrame.name} (Level ${selectedFrame.currentLevel})`;
-    } else {
-        html += 'No frame selected';
-    }
+    // Safely get frame info
+    const frameName = selectedFrame ? selectedFrame.name : 'No frame selected';
+    const frameLevel = selectedFrame ? ` (Level ${selectedFrame.currentLevel})` : '';
     
-    html += ' + ';
+    // Safely get wheel info
+    const wheelName = selectedWheel ? selectedWheel.name : 'No wheel selected';
     
-    if (selectedWheel) {
-        html += selectedWheel.name;
-    } else {
-        html += 'No wheel selected';
-    }
+    html += `${frameName}${frameLevel} + ${wheelName}`;
     
     // Only show comparison if we have both selections
-    if (selectedWheel && selectedFrame) {
+    if (selectedWheel && selectedFrame && window.bestCombination) {
         const selectedTotal = selectedFrame.totalSavings + selectedWheel.totalSavings;
-        
-        // Compare with best combination
         const bestDiff = selectedTotal - window.bestCombination.totalSavings;
         const bestComparison = getComparisonText(bestDiff);
         
@@ -3967,20 +3958,23 @@ function updateFrameTable(results) {
             const row = document.createElement('tr');
             row.dataset.frameName = frame.name;
             row.onclick = () => highlightFrame(frame.name);
+            
+            // Safely format the values
+            const totalSavings = frame.totalSavings ? frame.totalSavings.toFixed(1) : '0.0';
+            const nextLevelGain = frame.currentLevel < 5 
+                ? (frame.nextLevelGain ? frame.nextLevelGain.toFixed(1) : '0.0') + 's'
+                : 'Max Level';
+            
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${frame.name}</td>
                 <td>${frame.currentLevel}</td>
-                <td>${frame.totalSavings.toFixed(1)}s</td>
-                <td>${frame.currentLevel < 5 ? frame.nextLevelGain.toFixed(1) + 's' : 'Max Level'}</td>
+                <td>${totalSavings}s</td>
+                <td>${nextLevelGain}</td>
             `;
             table.appendChild(row);
         });
 
-        // Automatically highlight the first entry
-        if (results.length > 0) {
-            highlightFrame(results[0].name);
-        }
     } catch (e) {
         console.error("Error updating frame table:", e);
     }
